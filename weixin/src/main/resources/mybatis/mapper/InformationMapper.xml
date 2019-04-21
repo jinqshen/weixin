@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jinqshen.weixin.mapper.InformationMapper">
+	<resultMap type="com.jinqshen.weixin.pojo.Information" id="BaseResultMap">
+		<id column="finacono" property="finacono" javaType="Integer"/>
+		<result column="studentnumber" property="studentnumber" jdbcType="VARCHAR"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="sex" property="sex" jdbcType="VARCHAR"/>
+		<result column="major" property="major" jdbcType="VARCHAR"/>
+		<result column="academy" property="academy" jdbcType="VARCHAR"/>
+		<result column="project" property="project" jdbcType="VARCHAR"/>
+		<result column="grade" property="grade" javaType="Float"/>
+		<result column="isqualified" property="isqualified" jdbcType="TINYINT"/>
+	</resultMap>
+	
+	
+	<select id="findAll" resultMap="BaseResultMap">
+		select finacono,finaco.studentnumber,name,sex,major,academy,project,grade,isqualified
+		from finaco,studentinfo 
+		where finaco.studentnumber=studentinfo.studentnumber
+	</select>
+	
+	<select id="findAllCount" resultType="Integer">
+		select count(*)
+		from finaco,studentinfo 
+		where finaco.studentnumber=studentinfo.studentnumber
+	</select>
+	
+	<select id="findByLimit" resultMap="BaseResultMap">
+		select finacono,finaco.studentnumber,name,sex,major,academy,project,grade,isqualified
+		from finaco,studentinfo 
+		where finaco.studentnumber=studentinfo.studentnumber
+		limit #{currentPage},#{pageSize}
+	</select>
+	
+	<delete id="deleteInfoByFinacono">
+		delete
+		from finaco
+		where finacono=#{finacono}
+	</delete>
+	
+	<select id="selectInfoByFinacono" resultType="com.jinqshen.weixin.pojo.Information">
+		select finacono,finaco.studentnumber,name,sex,major,academy,project,grade,isqualified
+		from finaco,studentinfo 
+		where studentinfo.studentnumber=finaco.studentnumber and finacono=#{finacono};
+	</select>
+	
+	<update id="updataFinaco">
+		update finaco
+		set project=#{project},grade=#{grade},isqualified=#{isqualified}
+		where finacono=#{finacono}
+	</update>
+</mapper>

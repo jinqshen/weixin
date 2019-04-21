@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jinqshen.weixin.mapper.ManageAcademyMapper">
+	
+	<select id="findAllAcademyInfo" resultType="com.jinqshen.weixin.pojo.table.Academy">
+		select *
+		from academy
+		<where>
+			1=1
+		</where>
+	</select>
+	
+</mapper>

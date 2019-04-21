@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jinqshen.weixin.mapper.StudentMapper">
+	<resultMap type="com.jinqshen.weixin.pojo.StudentAccount" id="BaseResultMap">
+		<id column="student_number" property="student_number" jdbcType="VARCHAR"/>
+		<result column="student_password" property="student_password" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		student_number, student_password
+	</sql>
+	
+	<select id="findAccount" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"></include>
+		from student_account
+		where student_number = #{student_number} and student_password = #{studentPassword_md5}
+	</select>
+	
+	<insert id="registAccount">
+		insert
+		into student_account(student_number, student_password)
+		values(#{student_number}, #{studentPassword_md5})
+	</insert>
+</mapper>

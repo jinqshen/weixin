@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: htmlhead"></head>
+<body>
+	<section  layout:fragment="content">
+		<div class="container">
+			<div class="row">
+				<form class="form-inline" role="form">
+					<div class="form-group col-md-3">
+						<label class="control-label" for="studentNumber">按学号搜索</label><br>
+						<input type="text" class="form-control" id="studentNumber" placeholder="">
+					</div>
+					<div class="form-group col-md-3">
+						<label class="control-label" for="project">按体测项目搜索</label><br>
+						<select id="project" class="form-control" style="width: 70%;">
+							<option>...</option>
+							<option>1000米</option>
+							<option>跳远</option>
+							<option>跳远</option>
+							<option>跳远</option>
+						</select>
+					</div>
+					<div class="form-group col-md-3">
+						<label class="control-label" for="semester">按学期搜索</label><br>
+						<select id="semester" class="form-control" style="width: 70%;">
+							<th:block>
+							
+							</th:block>
+							<option>...</option>
+							<option>第一学期</option>
+							<option>第二学期</option>
+							<option>第三学期</option>
+							<option>第四学期</option>
+						</select>
+					</div>
+					<div class="form-group col-md-3">
+						<label class="control-label" for=""></label><br>
+						<button th:onclick="search()" class="btn btn-primary">搜索</button>
+						<button th:onclick="newData()" class="btn btn-primary">新增</button>
+					</div>
+
+				</form>
+			</div>
+			<table id="gradeForm" class="table table-bordered table-hover">
+				<caption class="text-center">体测成绩单</caption>
+					<thead>
+						<tr>
+							<th class="text-center">学号</th>
+							<th class="text-center">姓名</th>
+							<th class="text-center">性别</th>
+							<th class="text-center">体测项目</th>
+							<th class="text-center">体测成绩</th>
+							<th class="text-center">合格情况</th>
+							<th class="text-center">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr  th:each="information,iterStat : ${pageBean.informations}"> 
+						   <td th:text="${information.studentnumber}">Studentnumber</td>
+						   <td th:text="${information.name}">Name</td>
+						   <td th:text="${information.sex}">Sex</td>
+						   <td th:text="${information.project}">Project</td>
+						   <td th:text="${information.grade}">Grade</td>
+						   <td th:if="${information.isqualified==true}">合格</td>
+						   <td th:if="${information.isqualified==false}">不合格</td>
+						   <td>
+						   		<button class="btn btn-primary" th:onclick="'editDataById('+${information.finacono}+')'" data-toggle="modal" data-target="#myModal">修改</button>
+						   		<button th:onclick="'deleteDataById('+${information.finacono}+')'" class="btn btn-danger">删除</button>
+						   </td>
+						</tr>
+					</tbody>
+			</table>
+			<div class="text-center">
+				<ul class="pagination" >
+				    <li th:if="${pageBean.currentPage==1}" class="disabled"><a href="#">&laquo;</a></li>
+				    <li th:unless="${pageBean.currentPage==1}"><a th:onclick="'locationUrl(\'/bookList?page=' + ${pageBean.currentPage-1} + '\',\'\');'">&laquo;</a></li>
+				    <th:block th:each="page : ${#numbers.sequence(1, pageBean.totalPage)}">
+					    <li th:if="${pageBean.currentPage==page}" class="active">
+					    	<a th:text="${page}" href="javascript:void(0)"></a>
+					    </li>
+					    <li th:unless="${pageBean.currentPage==page}">
+					    	<a th:text="${page}" th:onclick="'locationUrl(\'/bookList?page=' + ${page} + '\',\'\');'"></a>
+					    </li>
+				    </th:block>
+				    <li th:if="${pageBean.currentPage==pageBean.totalPage}" class="disabled"><a href="#">&raquo;</a></li>
+				    <li th:unless="${pageBean.currentPage==pageBean.totalPage}"><a th:onclick="'locationUrl(\'/bookList?page=' + ${pageBean.currentPage + 1} + '\',\'\');'">&raquo;</a></li>
+				</ul>
+			</div>
+			
+			<!-- 模态框（Modal） -->
+			<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="myModalLabel">
+								修改信息
+							</h4>
+						</div>
+						<div class="modal-body">
+							<form class="form-horizontal">
+								<fieldset disabled>
+									<input id="finacono" name="finacono" class="form-control disabled" style="" type="hidden">
+									<div class="form-group">
+										<label class="control-label col-sm-2">学号</label>
+										<div class="col-sm-10">
+											<input id="studentnumber" name="studentnumber" class="form-control disabled" style="" type="text">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-sm-2">姓名</label>
+										<div class="col-sm-10">
+											<input id="name1" name="name" class="form-control disabled" style="" type="text">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-sm-2">性别</label>
+										<div class="col-sm-10">
+											<select id="sexopt" class="form-control">
+												<option id="boyopt" name="sex" value="男">男</option>
+												<option id="grilopt" name="sex" value="女">女</option>
+											</select>
+										</div>
+									</div>
+								</fieldset>
+								<div class="form-group">
+									<label class="control-label col-sm-2">体测项目</label>
+									<div class="col-sm-10">
+										<select id="projectopt" class="form-control">
+											<option id="opt1" value="1000米跑">1000米跑</option>
+											<option id="opt2" value="50米跑">50米跑</option>
+											<option id="opt3" value="立定跳远">立定跳远</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">体测成绩</label>
+									<div class="col-sm-10">
+										<input id="grade" name="grade" class="form-control" style="" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">合格情况</label>
+									<div class="col-sm-10">
+										<select id="isqualifiedopt"  class="form-control">
+											<option id="qualified" value="true">合格</option>
+											<option id="unqualified" value="false">不合格</option>
+										</select>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button id="closeBtn" type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button id="submitEditBtn" type="button" data-dismiss="modal" class="btn btn-primary">
+								提交更改
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+		</div>
+	</section>
+</body>
+	<script type="text/javascript">
+		function deleteDataById(id) {
+			if (confirm('确定删除此数据？')) {
+				$.post("/delete", {
+						finacono: id
+					},
+					function(data) {
+						toastr.success(data, '操作成功');
+						locationUrl('/bookList','');
+					});
+			}
+		}
+		function editDataById(id){
+			$.post("/edit",{
+				finacono: id
+			},function(data){
+				$("#finacono").val(data.finacono);
+				$("#studentnumber").val(data.studentnumber);
+				$("#name1").val(data.name);
+				$("#grade").val(data.grade);
+				var obj1 = $("#sexopt").get(0);
+				for(var i = 0;i < obj1.options.length;i++){
+					var tmp = obj1.options[i].value;
+					if(tmp == data.sex){
+						obj1.options[i].selected="selected";
+						break;
+					}
+				}
+				var obj2 = $("#projectopt").get(0);
+				for(var i = 0;i < obj2.options.length;i++){
+					var tmp = obj2.options[i].value;
+					if(tmp == data.project){
+						obj2.options[i].selected="selected";
+						break;
+					}
+				}
+				var obj3 = $("#isqualifiedopt").get(0);
+				for(var i = 0;i < obj3.options.length;i++){
+					var tmp = obj3.options[i].value;
+					if(tmp == data.isqualified.toString()){
+						obj3.options[i].selected="selected";
+						break;
+					}
+				}
+			});
+		}
+		$(document).ready(function(){
+			$("#submitEditBtn").click(function(){
+			    $.post("/update",
+			    	{
+			    		finacono:$("#finacono").val(),
+			    		studentnumber:$("#studentnumber").val(),
+			    		project:$("#projectopt").val(),
+			    		grade:$("#grade").val(),
+			    		isqualified:$("#isqualifiedopt").val()
+			    	},
+			    	function(data,status){
+					toastr.success('修改成功！', '操作成功');
+					locationUrl('/bookList','');
+			    });
+			});
+		});
+		
+	</script>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+     <header class="topnavbar-wrapper" th:fragment="header">
+	<nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #4e7dc0;" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<a href="/bookList" class="navbar-brand">
+					<span><img class="navbar-logo" src="/image/logo.png" alt="managelogo"></span>
+				</a>
+				
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#system-menu">
+					<span class="sr-only">Menu Toggle</span>
+					<span class="icon-bar white-icon-bar"></span>
+					<span class="icon-bar white-icon-bar"></span>
+					<span class="icon-bar white-icon-bar"></span>
+				</button>
+			</div>
+			
+			<div class="collapse navbar-collapse" id="system-menu">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a onclick="locationUrl('/bookList','bookList')">学生成绩管理</a></li>
+					<li><a onclick="locationUrl('/importData','')">学生成绩导入</a></li>
+					<li><a href="/manage/studentInfoList">学生信息管理</a></li>
+					<li><a href="#">体测预约安排</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+   </header>
+
+</body>
+
+</html>

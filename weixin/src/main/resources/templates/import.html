@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: htmlhead"></head>
+<body>
+	<section  layout:fragment="content">
+		<div class="container">
+			<form action="/saveMoreExcelData" method="post" class="form-horizontal" enctype="multipart/form-data">
+		        <div class="file-loading">
+		            <input id="kv-explorer" name="mfile" type="file" multiple>
+		        </div>
+		        <br>
+		        <button type="submit" class="btn btn-primary">上传所有</button>
+		        <button type="reset" class="btn btn-outline-secondary">重置</button>
+		    </form>
+		</div>
+	</section>
+</body>
+	<script type="text/javascript">
+	$(document).ready(function () {
+        $("#kv-explorer").fileinput({
+            'theme': 'explorer-fas',
+            'uploadUrl': '/saveExcelData',
+            'allowedFileExtensions': ['xls', 'xlsx'],
+            overwriteInitial: false,
+            initialPreviewAsData: true,
+            language: 'zh'
+        });
+        
+    });
+	</script>
+</html>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jinqshen.weixin.mapper.ManageStudentInfoMapper">
+	
+	<select id="findCountOfAllStudentInfo" resultType="java.lang.Integer">
+		select count(*)
+		from student_info
+		<where>
+			1=1
+		</where>
+	</select>
+	
+	<select id="findCountOfStudentInfoByHighCondition" parameterType="java.util.List" resultType="java.lang.Integer">
+		select count(*)
+		from student_info
+		<where>
+			1=1 and
+			<foreach collection="list" index="index" item="item" separator=" " open=" " close=" ">
+				<if test="item.andor != null and item.andor !=''">
+					<if test="item.andor == 'and'">
+						and
+					</if>
+					<if test="item.andor == 'or'">
+						or
+					</if>
+				</if>
+				<if test="item.conditionName != null and item.conditionName != ''">
+					<if test="item.conditionName == 'student_number'">
+						student_number = #{item.conditionValue}
+					</if>
+					<if test="item.conditionName == 'name'">
+						name like "%"#{item.conditionValue}"%"
+					</if>
+					<if test="item.conditionName == 'sex'">
+						sex = #{item.conditionValue}
+					</if>
+					<if test="item.conditionName == 'academy'">
+						academy = #{item.conditionValue}
+					</if>
+					<if test="item.conditionName == 'major'">
+						major = #{item.conditionValue}
+					</if>
+					<if test="item.conditionName == 'id_number'">
+						major = #{item.conditionValue}
+					</if>
+				</if>
+			</foreach>
+		</where>
+	</select>
+	
+	<select id="findStudentInfoByHighCondition" resultType="com.jinqshen.weixin.pojo.table.StudentInfo">
+		select *
+		from student_info
+		<where>
+			1=1 and
+			<foreach collection="list" index="index" item="item" separator=" " open=" " close=" ">
+				<if test="item.andor != null and item.andor !=''">
+					<if test="item.andor == 'and'">
+						and
+					</if>
+					<if test="item.andor == 'or'">
+						or
+					</if>
+				</if>
+				<if test="item.conditionName != null and item.conditionName != ''">
+					<if test="item.conditionName == 'student_number'">
+						student_number = #{item.conditionValue}
+					</if>
+					<if test="item.conditionName == 'name'">
+						name like "%"#{item.conditionValue}"%"
+					</if>
+					<if test="item.conditionName == 'sex'">
+						sex = #{item.conditionValue}
+					</if>
+					<if test="item.conditionName == 'academy'">
+						academy = #{item.conditionValue}
+					</if>
+					<if test="item.conditionName == 'major'">
+						major = #{item.conditionValue}
+					</if>
+					<if test="item.conditionName == 'id_number'">
+						major = #{item.conditionValue}
+					</if>
+				</if>
+			</foreach>
+		</where>
+		limit #{currentPage}, #{pageSize}
+	</select>
+	
+	<select id="findStudentInfoByPageBean" resultType="com.jinqshen.weixin.pojo.table.StudentInfo">
+		select *
+		from student_info
+		<where>
+			1=1
+		</where>
+		limit #{currentPage},#{pageSize}
+	</select>
+	
+	<select id="findStudentInfoByStudentNumber"  resultType="com.jinqshen.weixin.pojo.table.StudentInfo">
+		select *
+		from student_info
+		<where>
+			student_number = #{student_number}
+		</where>
+	</select>
+	
+	<select id="findCountOfStudentInfoBySomeCondition" resultType="java.lang.Integer">
+		select count(*)
+		from student_info
+		<where>
+			1 = 1
+			<if test="student_number != null and student_number != '' and student_number != 0">
+				and student_number = #{student_number}
+			</if>
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="academy != null and academy != ''">
+				and academy = #{academy}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findStudentInfoBySomeCondition" resultType="com.jinqshen.weixin.pojo.table.StudentInfo">
+		select *
+		from student_info
+		<where>
+			1 = 1
+			<if test="student_number != null and student_number != '' and student_number != 0">
+				and student_number = #{student_number}
+			</if>
+			<if test="name != null and name != ''">
+				and name like "%"#{name}"%"
+			</if>
+			<if test="academy != null and academy != ''">
+				and academy = #{academy}
+			</if>
+		</where>
+		limit #{currentPage},#{pageSize}
+	</select>
+	
+	<delete id="deleteStudentInfoByStudentNumber">
+		delete
+		from student_info
+		<where>
+			student_number = #{student_number}
+		</where>
+	</delete>
+	
+	<update id="updateOneStudentInfoByEntity" parameterType="com.jinqshen.weixin.pojo.table.StudentInfo">
+		update student_info
+		<set>
+			name = #{name},sex = #{sex},major = #{major},academy = #{academy},birth = #{birth},id_number = #{id_number}
+		</set>
+		<where>
+			student_number = #{student_number}
+		</where>
+	</update>
+	
+	<insert id="insertStudentInfo" parameterType="com.jinqshen.weixin.pojo.table.StudentInfo">
+		insert
+		into student_info(student_number, name, sex, major, academy, birth, id_number)
+		values(#{student_number}, #{name}, #{sex}, #{major}, #{academy}, #{birth}, #{id_number})
+	</insert>
+</mapper>

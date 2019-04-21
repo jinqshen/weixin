@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="layout">
+<body>
+	<section layout:fragment="content">
+		<div class="container">
+			<div id="condition0" class="row">
+				<div id="alterDiv0" class="col-md-3 form-group">
+					<label class="control-label">检索条件</label>
+				</div>
+				<div class="col-md-7 form-group">
+					<div class="input-group">
+						<div class="input-group-btn">
+							<button class="btn btn-default dropdown-toggle" name="searchType" data-toggle="dropdown">
+								<span id="conditionName0">学号</span>
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" role="menu">
+								<li><a id="stdNumber0" href="#" onclick="changeConditionNameAndType(this,0)">学号</a></li>
+								<li><a id="stdName0" href="#" onclick="changeConditionNameAndType(this,0)">姓名</a></li>
+								<li><a id="stdSex0" href="#" onclick="changeConditionNameAndType(this,0)">性别</a></li>
+								<li><a id="stdAcademy0" href="#" onclick="changeConditionNameAndType(this,0)">所在学院</a></li>
+								<li><a id="stdMajor0" href="#" onclick="changeConditionNameAndType(this,0)">专业</a></li>
+								<li><a id="stdIDnumber0" href="#" onclick="changeConditionNameAndType(this,0)">身份证号</a></li>
+							</ul>
+						</div>
+						<input id="conditionValue0" class="form-control" type="text" />
+						<select id="sexopt0" class="form-control">
+							<option value ="男">男</option>
+							<option value ="女">女</option>
+						</select>
+						<select id="academyopt0" class="form-control">
+							<option value ="">请选择学院</option>
+							<th:block th:each="academy,iterStat : ${academies}">
+								<option th:id="${academy.academy_no}" th:value="${academy.academy_name}" th:text="${academy.academy_name}">学院名</option>
+							</th:block>
+						</select>
+						<select id="majoropt0" class="form-control">
+							<option value ="">请选择专业</option>
+							<option value ="信息与计算科学">信息与计算科学</option>
+							<option value ="数学与应用数学">数学与应用数学</option>
+							<option value ="统计学">统计学</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-1 form-group">
+					<button class="btn btn-primary" onclick="addCondition()">+</button>
+				</div>
+				<div class="col-md-1 form-group">
+					<button id="rmBtn0" class="btn btn-primary" onclick="removeCondition(0)">-</button>
+				</div>
+			</div>
+			<div id="searchBtnDiv" class="row">
+				<div class="form-group col-md-1 col-xs-1">
+					<button id="searchBtn" type="button" class="btn btn-primary" onclick="search()"><span class="fa fa-search"></span>搜索</button>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<form class="form-inline" role="form">
+					<div class="form-group col-md-3">
+						<label class="control-label" for="studentNumber">按学号搜索</label><br>
+						<input type="text" class="form-control" id="studentNumber" th:value="${studentInfoCondition.student_number}" placeholder="">
+					</div>
+					<div class="form-group col-md-3">
+						<label class="control-label" for="project">按姓名搜索</label><br>
+						<input type="text" class="form-control" id="studentName" th:value="${studentInfoCondition.name}" placeholder="">
+					</div>
+					<div class="form-group col-md-3">
+						<label class="control-label" for="semester">按学院搜索</label><br>
+						<select id="select_academyopt" class="form-control" style="width: 70%;">
+							<option value="">请选择学院</option>
+							<th:block th:each="academy,iterStat : ${academies}">
+								<option th:id="${academy.academy_no}" th:value="${academy.academy_name}" th:text="${academy.academy_name}">学院名</option>
+							</th:block>
+						</select>
+					</div>
+					<div class="form-group col-md-3">
+						<label class="control-label" for=""></label><br>
+						<button type="button" class="btn btn-primary" onclick="searchStudentInfoByCondition()">搜索</button>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStudentModal"><span class="fa fa-user-plus"></span>新增</button>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#excelImportModal"><span class="fa fa-file-excel-o"></span>Excel导入</button>
+					</div>
+				</form>
+			</div>
+			<table id="studentInfoForm" class="table table-bordered table-hover">
+				<caption class="text-center">学生信息</caption>
+					<thead>
+						<tr>
+							<th class="text-center">学号</th>
+							<th class="text-center">姓名</th>
+							<th class="text-center">性别</th>
+							<th class="text-center">专业</th>
+							<th class="text-center"><span class="fa fa-home"></span>&nbsp;学院</th>
+							<th class="text-center hidden-xs">出生年月</th>
+							<th class="text-center hidden-xs"><span class="fa fa-id-card"></span>&nbsp;身份证号</th>
+							<th class="text-center">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<th:block th:if="${studentInfoPageBean.informations!=null}">
+							<tr  th:each="information,iterStat : ${studentInfoPageBean.informations}"> 
+							   <td th:text="${information.student_number}">Studentnumber</td>
+							   <td th:text="${information.name}">Name</td>
+							   <td th:text="${information.sex}">Sex</td>
+							   <td th:text="${information.major}">Major</td>
+							   <td th:text="${information.academy}">Academy</td>
+							   <td class="hidden-xs" th:text="${information.birth}">Birth</td>
+							   <td class="hidden-xs" th:text="${information.id_number}">ID_Number</td>
+							   <td>
+							   		<button class="btn btn-primary" th:onclick="'editStudentInfoByStudentNumber('+${information.student_number}+')'" data-toggle="modal" data-target="#myModal"><span class="fa fa-edit"></span>修改</button>
+							   		<button th:onclick="'deleteStudentInfoByStudentNumber('+${information.student_number}+')'" class="btn btn-danger"><span class="fa fa-trash"></span>删除</button>
+							   </td>
+							</tr>
+						</th:block>
+						<th:block th:if="${studentInfoPageBean.informations==null}">
+							<p>未查到任何学生信息</p>
+						</th:block>
+					</tbody>
+			</table>
+			<th:block th:if="${studentInfoPageBean.totalSize!=0}">
+				<div class="text-center">
+					<ul class="pagination" >
+					    <li th:if="${studentInfoPageBean.currentPage==1}" class="disabled"><a href="#">&laquo;</a></li>
+					    <li th:unless="${studentInfoPageBean.currentPage==1}"><a th:onclick="'pageFun(' + ${studentInfoPageBean.currentPage-1} + ')'">&laquo;</a></li>
+					    <th:block th:each="page : ${#numbers.sequence(1, studentInfoPageBean.totalPage)}">
+						    <li th:if="${studentInfoPageBean.currentPage==page}" class="active">
+						    	<a th:text="${page}" href="javascript:void(0)"></a>
+						    </li>
+						    <li th:unless="${studentInfoPageBean.currentPage==page}">
+						    	<a th:text="${page}" th:onclick="'pageFun(' + ${page} + ')'"></a>
+						    </li>
+					    </th:block>
+					    <li th:if="${studentInfoPageBean.currentPage==studentInfoPageBean.totalPage}" class="disabled"><a href="#">&raquo;</a></li>
+					    <li th:unless="${studentInfoPageBean.currentPage==studentInfoPageBean.totalPage}"><a th:onclick="'pageFun(' + ${studentInfoPageBean.currentPage+1} + ')'">&raquo;</a></li>
+					</ul>
+				</div>
+			</th:block>
+			
+			<!-- 模态框（Modal） -->
+			<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="myModalLabel">
+								修改信息
+							</h4>
+						</div>
+						<div class="modal-body">
+							<form class="form-horizontal">
+								<fieldset disabled>
+									<div class="form-group">
+										<label class="control-label col-sm-2">学号</label>
+										<div class="col-sm-10">
+											<input id="student_number" name="student_number" class="form-control disabled" type="text">
+										</div>
+									</div>
+								</fieldset>
+								<div class="form-group">
+									<label class="control-label col-sm-2">姓名</label>
+									<div class="col-sm-10">
+										<input id="name" name="name" class="form-control" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">性别</label>
+									<div class="col-sm-10">
+										<select id="sexopt" class="form-control">
+											<option id="boyopt" name="sex" value="男">男</option>
+											<option id="grilopt" name="sex" value="女">女</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">所在学院</label>
+									<div class="col-sm-10">
+										<select id="academyopt" class="form-control">
+											<option value="">请选择学院</option>
+											<th:block th:each="academy,iterStat : ${academies}">
+												<option th:id="${academy.academy_no}" th:value="${academy.academy_name}" th:text="${academy.academy_name}">学院名</option>
+											</th:block>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">专业</label>
+									<div class="col-sm-10">
+										<select id="majoropt" class="form-control">
+											<option value="">请选择专业</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">生日</label>
+									<div class="col-sm-10">
+										<input id="birth" name="birth" class="form-control" type="date">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">身份证号</label>
+									<div class="col-sm-10">
+										<input id="id_number" name="id_number" class="form-control" type="text">
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button id="closeBtn" type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button id="submitEditBtn" type="button" onclick="updateStudentInfo()" data-dismiss="modal" class="btn btn-primary">
+								提交更改
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+			
+			<!-- 新增学生信息模态框 -->
+			<div class="modal" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="myModalLabel">
+								新增学生信息
+							</h4>
+						</div>
+						<div class="modal-body">
+							<form class="form-horizontal">
+								<div class="form-group">
+									<label class="control-label col-sm-2">学号</label>
+									<div class="col-sm-10">
+										<input id="add_student_number" name="student_number" class="form-control" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">姓名</label>
+									<div class="col-sm-10">
+										<input id="add_name" name="name" class="form-control" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">性别</label>
+									<div class="col-sm-10">
+										<select id="add_sexopt" class="form-control">
+											<option id="add_boyopt" name="sex" value="男">男</option>
+											<option id="add_grilopt" name="sex" value="女">女</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">所在学院</label>
+									<div class="col-sm-10">
+										<select id="add_academyopt" class="form-control">
+											<option value="">请选择学院</option>
+											<th:block th:each="academy,iterStat : ${academies}">
+												<option th:id="'add_' + ${academy.academy_no}" th:value="${academy.academy_name}" th:text="${academy.academy_name}">学院名</option>
+											</th:block>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">专业</label>
+									<div class="col-sm-10">
+										<select id="add_majoropt" class="form-control">
+											<option value="">请选择专业</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">生日</label>
+									<div class="col-sm-10">
+										<input id="add_birth" name="birth" class="form-control" type="date">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2">身份证号</label>
+									<div class="col-sm-10">
+										<input id="add_id_number" name="id_number" class="form-control" type="text">
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button id="add_closeBtn" type="button" class="btn btn-default" data-dismiss="modal">取消
+							</button>
+							<button id="add_submitEditBtn" type="button" onclick="insertStudentInfo()" data-dismiss="modal" class="btn btn-primary">
+								确定
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+			
+			<div class="modal" id="excelImportModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+							</button>
+							<h4 class="modal-title" id="myModalLabel">
+								学生信息批量导入
+							</h4>
+						</div>
+						<div class="modal-body">
+							<a class="btn btn-primary" href="/manage/downloadStudentInfoExcel" >学生信息样例表下载</a><br>
+							<form id="uploadStudentInfoFile" method="post" class="form-horizontal" enctype="multipart/form-data">
+						        <div class="file-loading">
+						            <input id="kv-explorer" name="mfile" type="file" multiple>
+						        </div>
+						    </form>
+						</div>
+						<div class="modal-footer">
+							<button id="cancelBtn" type="button" class="btn btn-default" data-dismiss="modal">取消
+							</button>
+							<button id="importBtn" type="button" onclick="" data-dismiss="modal" class="btn btn-primary">
+								全部导入
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+		</div>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		    var academies = /*[[${academies}]]*/ 'Academies';
+			var majors = /*[[${majors}]]*/ 'Majors';
+			var academy = [];
+			for(var i = 0;i < academies.length;i++){
+				academy[academies[i].academy_name] = [];
+				for(var j = 0;j < majors.length;j++){
+					var m = {name: majors[j].major_name, id: majors[j].major_no};
+					if(majors[j].academy_no == academies[i].academy_no)
+						academy[academies[i].academy_name].push(m);
+				}
+			}
+			var objacademyopt = $("#select_academyopt").get(0);
+			for(var i = 0;i < objacademyopt.options.length;i++){
+				var tmp = objacademyopt.options[i].value;
+				if(tmp == /*[[${studentInfoCondition.academy}]]*/ ''){
+					objacademyopt.options[i].selected="selected";
+					break;
+				}
+			}
+			
+			function pageFun(page){
+				locationUrl('/manage/studentInfoList?page=' + page + '&student_number=' +  $("#studentNumber").val() + '&name=' + $("#studentName").val() + '&academy=' + $("#select_academyopt").val(),'studentInfoList');
+			}
+		/*]]>*/
+		</script>
+	</section>
+</body>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	    var academies = /*[[${academies}]]*/ 'Academies';
+		var majors = /*[[${majors}]]*/ 'Majors';
+		var academy = [];
+		for(var i = 0;i < academies.length;i++){
+			academy[academies[i].academy_name] = [];
+			for(var j = 0;j < majors.length;j++){
+				var m = {name: majors[j].major_name, id: majors[j].major_no};
+				if(majors[j].academy_no == academies[i].academy_no)
+					academy[academies[i].academy_name].push(m);
+			}
+		}
+		var objacademyopt = $("#select_academyopt").get(0);
+		for(var i = 0;i < objacademyopt.options.length;i++){
+			var tmp = objacademyopt.options[i].value;
+			if(tmp == /*[[${studentInfoCondition.academy}]]*/ ''){
+				objacademyopt.options[i].selected="selected";
+				break;
+			}
+		}
+		
+		function pageFun(page){
+			locationUrl('/manage/studentInfoList?page=' + page + '&student_number=' +  $("#studentNumber").val() + '&name=' + $("#studentName").val() + '&academy=' + $("#select_academyopt").val(),'studentInfoList');
+		}
+	/*]]>*/
+	</script>
+	
+	<script type="text/javascript">
+	
+		$(function () {
+	        $("#importBtn").click(function () {
+	            var formData = new FormData($('#uploadStudentInfoFile')[0]);
+	            $.ajax({
+	                type: 'post',
+	                url: "/manage/importStudentInfoExcel",
+	                data: formData,
+	                cache: false,
+	                processData: false,
+	                contentType: false,
+	            }).success(function (data) {
+	                alert(data);
+	                locationUrl('/manage/studentInfoList','');
+	            }).error(function () {
+	                alert("上传失败");
+	            });
+	        });
+	    });
+	
+		//文件上传初始化
+		$(document).ready(function () {
+	        $("#kv-explorer").fileinput({
+	            'theme': 'explorer-fas',
+	            'uploadUrl': '/saveExcelData',
+	            'allowedFileExtensions': ['xls', 'xlsx'],
+	            overwriteInitial: false,
+	            initialPreviewAsData: true,
+	            language: 'zh'
+	        });
+	        
+	    });
+	
+		//条件查询
+		function searchStudentInfoByCondition(){
+			locationUrl('/manage/studentInfoList?student_number=' + $("#studentNumber").val() + '&name=' + $("#studentName").val() + '&academy=' + $("#select_academyopt").val(),'studentInfoList');
+		}
+	
+		//删除
+		function deleteStudentInfoByStudentNumber(student_number) {
+			if (confirm('确定删除此数据？')) {
+				$.post("/manage/deleteStudentInfo", {
+						student_number: student_number
+					},
+					function(data) {
+						toastr.success(data, '操作成功');
+						locationUrl('/manage/studentInfoList','studentInfoList');
+					});
+			}
+		}
+		
+		//编辑
+		function editStudentInfoByStudentNumber(student_number){
+			$.post("/manage/editStudentInfo",{
+				student_number: student_number
+			},function(data){
+				$("#student_number").val(data.student_number);
+				$("#name").val(data.name);
+				$("#birth").val(data.birth);
+				$("#id_number").val(data.id_number);
+				var obj1 = $("#sexopt").get(0);
+				for(var i = 0;i < obj1.options.length;i++){
+					var tmp = obj1.options[i].value;
+					if(tmp == data.sex){
+						obj1.options[i].selected="selected";
+						break;
+					}
+				}
+				var obj2 = $("#majoropt").get(0);
+				for(var i = 0;i < obj2.options.length;i++){
+					var tmp = obj2.options[i].value;
+					if(tmp == data.major){
+						obj2.options[i].selected="selected";
+						break;
+					}
+				}
+				var obj3 = $("#academyopt").get(0);
+				for(var i = 0;i < obj3.options.length;i++){
+					var tmp = obj3.options[i].value;
+					if(tmp == data.academy){
+						obj3.options[i].selected="selected";
+						break;
+					}
+				}
+				addOptions(document.getElementById('majoropt'), academy[$("#academyopt").val()]);
+				var obj4 = $("#majoropt").get(0);
+				for(var i = 0;i < obj4.options.length;i++){
+					var tmp = obj4.options[i].value;
+					if(tmp == data.major){
+						obj4.options[i].selected="selected";
+						break;
+					}
+				}
+			});
+		}
+		
+		//更新
+		function updateStudentInfo(){
+			$.post("/manage/updateStudentInfo",{
+				student_number: $("#student_number").val(),
+				name: $("#name").val(),
+				sex: $("#sexopt").val(),
+				major: $("#majoropt").val(),
+				academy: $("#academyopt").val(),
+				birth: $("#birth").val(),
+				id_number: $("#id_number").val()
+			},function(data){
+				toastr.success(data, '操作成功');
+				locationUrl('/manage/studentInfoList','studentInfoList');
+			});
+		}
+		
+		//新增
+		function insertStudentInfo(){
+			$.post("/manage/addStudentInfo",{
+				student_number: $("#add_student_number").val(),
+				name: $("#add_name").val(),
+				sex: $("#add_sexopt").val(),
+				major: $("#add_majoropt").val(),
+				academy: $("#add_academyopt").val(),
+				birth: $("#add_birth").val(),
+				id_number: $("#add_id_number").val()
+			},function(data){
+				toastr.success(data, '操作成功');
+				locationUrl('/manage/studentInfoList','studentInfoList');
+			});
+		}
+		
+		document.getElementById('academyopt').onchange = function(){
+			addOptions(document.getElementById('majoropt'), academy[this.value]);
+		}
+		
+		document.getElementById('add_academyopt').onchange = function(){
+			addOptions(document.getElementById('add_majoropt'), academy[this.value]);
+		}
+		
+		//为专业选择框动态添加选项，实现与学院选择框的联动
+		function addOptions(s, arr, initValue) {
+			if (!arr || arr.length == 0) arr = [{ name: '请选择专业', id: '' }];
+			if (!s) { alert('select对象不存在！'); return false }
+			s.options.length = 0;
+			var selectedIndex = 0;
+			for (var i = 0; i < arr.length; i++) {
+				s.options.add(new Option(arr[i].name, arr[i].name));
+				if (arr[i].id == initValue) selectedIndex = i;
+			}
+		}
+	</script>
+</html>
