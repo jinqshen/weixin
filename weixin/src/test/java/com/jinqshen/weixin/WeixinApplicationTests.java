@@ -1,10 +1,12 @@
 package com.jinqshen.weixin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.jinqshen.weixin.vo.Transcript;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +44,7 @@ public class WeixinApplicationTests {
 	
 	@Resource
 	private RedisService redisService;
-	
-	@Test
-	public void mapperTest() {
-		StudentAccount findAccount = studentMapper.findAccount("2015214208", "1ae3ea8b05549372f61954df007e85cf");
-		System.out.println(findAccount.getStudent_number());
-		System.out.println(findAccount.getStudent_password());
-	}
-	
+
 	
 	@Test
 	public void contextLoads() {
@@ -62,21 +57,16 @@ public class WeixinApplicationTests {
 	@Test
 	public void jsonTest() {
 		SonButton sonButton1 = new SonButton();
-		sonButton1.setName("后台管理首页");
+		sonButton1.setName("后台管理入口");
 		sonButton1.setType("view");
-		sonButton1.setUrl("http://www.jinqshen.com/home");
+		sonButton1.setUrl("http://www.jinqshen.com/manage/login");
 		SonButton sonButton2 = new SonButton();
-		sonButton2.setName("搜狗搜索");
+		sonButton2.setName("学生入口");
 		sonButton2.setType("view");
-		sonButton2.setUrl("http://www.soso.com/");
-		SonButton sonButton3 = new SonButton();
-		sonButton3.setName("体测成绩查询");
-		sonButton3.setType("view");
-		sonButton3.setUrl("http://www.jinqshen.com/login");
+		sonButton2.setUrl("http://www.jinqshen.com/student/loginPage");
 		ArrayList<SonButton> sonButtons = new ArrayList<>();
 		sonButtons.add(sonButton1);
 		sonButtons.add(sonButton2);
-		sonButtons.add(sonButton3);
 		FatherButton fatherButton1 = new FatherButton();
 		fatherButton1.setType("click");
 		fatherButton1.setName("每日推荐");
@@ -96,6 +86,19 @@ public class WeixinApplicationTests {
 		String realurl = url.replace("ACCESS_TOKEN", access_Token);
 		JSONObject doPoststr = HttpClientUtil.doPoststr(realurl, json);
 		System.out.println(doPoststr);
+	}
+
+	@Test
+	public void mapToJson(){
+		HashMap<String, List<Transcript>> map = new HashMap<>();
+		ArrayList<Transcript> list = new ArrayList<>();
+		list.add(new Transcript(2015214208,"沈进强","跑步",50,"5'32","一般"));
+		list.add(new Transcript(2015214207,"柯傻逼","跑步",50,"5'32","一般"));
+		list.add(new Transcript(2015214206,"塔斯克","跑步",50,"5'32","一般"));
+		map.put("2018-2019",list);
+		Gson gson = new Gson();
+		String s = gson.toJson(map);
+		System.out.println(s);
 	}
 
 }

@@ -28,8 +28,19 @@ public class Finaco implements Serializable {
 	//年级
 	private String grade;
 	
-	//测试成绩
+	//测试成绩（用于标准表的比较）
 	private float test_result;
+	
+	//测试成绩（用于显示和录入）
+	private String test_result_describe;
+
+	public String getTest_result_describe() {
+		return test_result_describe;
+	}
+
+	public void setTest_result_describe(String test_result_describe) {
+		this.test_result_describe = test_result_describe;
+	}
 
 	public Integer getFinaco_no() {
 		return finaco_no;

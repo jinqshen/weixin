@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:fragment="htmlhead">
+<head th:fragment="htmlhead">
     <meta charset="utf-8"></meta>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
     <meta name="renderer" content="webkit" />
@@ -9,45 +9,86 @@
     <meta name="author" content=""></meta>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"></meta>
     <link rel="icon" href="/image/hfut.jpg" type="image/jpg" />
-   	<title >大学生体测管理系统</title>
-   	<link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" />
+    <title >大学生体测管理系统</title>
+    <link rel="stylesheet" th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" />
     <link rel="stylesheet" th:href="@{/css/simple-line-icons/css/simple-line-icons.css}"/>
-    <link rel="stylesheet" th:href="@{/css/animate.css/animate.min.css}"/>
+    <!--<link rel="stylesheet" th:href="@{/css/animate.css/animate.min.css}"/>-->
     <link rel="stylesheet" th:href="@{/css/toastr/toastr.min.css}"/>
-  	<link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
-    <link rel="stylesheet" th:href="@{/css/theme-i.css}" />
+    <!--<link rel="stylesheet" th:href="@{/css/bootstrap-3.4.1-dist/css/bootstrap.css}">-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
     <link rel="stylesheet" th:href="@{/css/fix.css}" />
     <link rel="stylesheet" th:href="@{/css/bootstrap-fileinput-5.0.1/fileinput.css}">
     <link rel="stylesheet" th:href="@{/theme/bootstrap-fileinput-5.0.1/explorer-fas/theme.css}" media="all">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" />
-  </head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <!--<script th:src="@{/js/jQuery/jquery-3.4.1.js}"></script>-->
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 
-  <body class="layout-fixed">
-    <div th:fragment="navbar"  class="wrapper"  role="navigation">
+</head>
+
+  <body>
+    <div th:fragment="navbar"  class="container"  role="navigation">
 		<div th:replace="/fragment/header::header">Header</div>
 		<div style="margin-top:65px" layout:fragment="content" id="content"></div>
 		<div th:replace="/fragment/footer::footer">Footer</div>
     </div>
-    
-    <script type="text/javascript" src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
-    <script type="text/javascript" th:src="@{/webjarslocator/jquery/jquery.min.js}"></script>
-    <script th:src="@{/js/jquery.form/jquery.form.min.js}"></script>
-	<script th:src="@{/webjars/bootstrap/3.3.6/dist/js/bootstrap.min.js}"></script>
-	<script th:src="@{/js/modernizr/modernizr.custom.js}" ></script>
-	<script th:src="@{/js/jQuery-Storage-API/jquery.storageapi.js}" ></script>
-	<script th:src="@{/js/app.js}" ></script>
-    <script th:src="@{/js/comm.js}" ></script>
-	<script th:src="@{/js/layout.js}" ></script>
-	<script th:src="@{/js/collect.js}" ></script>
-    <script th:src="@{/js/letter.js}" ></script>
-	<script th:src="@{/js/parsley.min.js}"></script>
-	<script th:src="@{/js/toastr/toastr.min.js}"></script> 
-	<script th:src="@{/js/bootstrap-fileinput-5.0.1/plugins/piexif.js}"></script>
-	<script th:src="@{/js/bootstrap-fileinput-5.0.1/plugins/sortable.js}"></script>
-	<script th:src="@{/js/bootstrap-fileinput-5.0.1/fileinput.js}"></script>
-	<script th:src="@{/theme/bootstrap-fileinput-5.0.1/fas/theme.js}"></script>
-	<script th:src="@{/theme/bootstrap-fileinput-5.0.1/explorer-fas/theme.js}"></script>
-	<script th:src="@{/js/bootstrap-fileinput-5.0.1/locales/zh.js}"></script>
-	<script th:src="@{/js/manage.js}"></script>
 </body>
+
+    <!--<script th:src="@{/css/bootstrap-3.4.1-dist/js/bootstrap.min.js}"></script>-->
+    <script th:src="@{/webjars/bootstrap/3.3.6/dist/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/comm.js}" ></script>
+    <script th:src="@{/js/parsley.min.js}"></script>
+    <script th:src="@{/js/toastr/toastr.min.js}"></script>
+    <script th:src="@{/js/bootstrap-fileinput-5.0.1/plugins/piexif.js}"></script>
+    <script th:src="@{/js/bootstrap-fileinput-5.0.1/plugins/sortable.js}"></script>
+    <script th:src="@{/js/bootstrap-fileinput-5.0.1/fileinput.js}"></script>
+    <script th:src="@{/theme/bootstrap-fileinput-5.0.1/fas/theme.js}"></script>
+    <script th:src="@{/theme/bootstrap-fileinput-5.0.1/explorer-fas/theme.js}"></script>
+    <script th:src="@{/js/bootstrap-fileinput-5.0.1/locales/zh.js}"></script>
+    <script th:src="@{/js/manage.js}"></script>
+    <script>
+        new Vue({
+            el:'#head',
+            data:{
+                username:"",
+                newpassword:"",
+                renewpassword:"",
+                newManageAccount:{manage_username:"",manage_password:"",remanage_password:""}
+            },
+            created:function () {
+                this.$http.post("/manage/getUserName",{},{emulateJSON:true}).then(function (data) {
+                    this.username = data.bodyText;
+                })
+            },
+            methods:{
+                newPassword:function () {
+                    if(this.newpassword == this.renewpassword){
+                        this.$http.post("/manage/newPassword",{
+                            newpassword:this.newpassword
+                        },{emulateJSON:true}).then(function (data) {
+                            alert(data.bodyText);
+                        })
+                    }else {
+                        alert("两次密码输入不一致");
+                    }
+                },
+                addManageAccount:function () {
+                    if(this.newManageAccount.manage_password == this.newManageAccount.remanage_password){
+                        this.$http.post("/manage/addManageAccount",{
+                            manage_username:this.newManageAccount.manage_username,
+                            manage_password:this.newManageAccount.manage_password
+                        },{emulateJSON:true}).then(function (data) {
+                            alert(data.bodyText);
+                            if(data.bodyText == "新增管理员成功"){
+                                this.newManageAccount={manage_username:"",manage_password:"",remanage_password:""};
+                            }
+                        })
+                    }else{
+                        alert("两次密码输入不一致!");
+                    }
+                }
+            }
+        })
+    </script>
 </html>

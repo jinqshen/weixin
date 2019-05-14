@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="student_layout">
+<body>
+<section layout:fragment="content">
+    <div id="app" class="container">
+        <div class="row">
+            <div class="col-xs-3 text-center">
+                <button @click="searchExtraExercise('')" type="button" class="btn btn-default">全部</button>
+            </div>
+            <div class="col-xs-3 text-center">
+                <button @click="searchExtraExercise('报名中')" type="button" class="btn btn-default">报名中</button>
+            </div>
+            <div class="col-xs-3 text-center">
+                <button @click="searchExtraExercise('进行中')" type="button" class="btn btn-default">进行中</button>
+            </div>
+            <div class="col-xs-3 text-center">
+                <button @click="searchExtraExercise('已结束')" type="button" class="btn btn-default">已结束</button>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-3" v-for="extraExercise in extraExercises">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        {{ extraExercise.project }}
+                    </div>
+                    <div class="panel-body" style="height: 270px">
+                        <label>创建时间：</label>{{extraExercise.createTime}}<br />
+                        <label>起止时间：</label>{{extraExercise.beginTime}}-{{extraExercise.endTime}} <br />
+                        <label>介绍：</label>{{extraExercise.introduce}}<br />
+                        <label>教师：</label>{{extraExercise.teacher}}<br />
+                        <label>状态：</label>{{extraExercise.status}}<br />
+                        <label>地点：</label>{{extraExercise.location}}<br />
+                        <label>容量：</label>{{extraExercise.capacity}}
+                    </div>
+                    <div class="panel-footer" style="height: 50px;">
+                        <template v-if="extraExercise.status == '报名中'">
+                            <button type="button" @click="exitExercise(extraExercise.extra_exercise_no)" class="btn btn-primary pull-right" v-bind:disabled="exitClassObject(extraExercise.extra_exercise_no)">退出</button>
+                            <button type="button" @click="joinExercise(extraExercise.extra_exercise_no)" class="btn btn-primary pull-right" v-if="joinClassObject(extraExercise.extra_exercise_no)" disabled style="margin-right: 10px;">已加入</button>
+                            <button type="button" @click="joinExercise(extraExercise.extra_exercise_no)" class="btn btn-primary pull-right" v-if="!joinClassObject(extraExercise.extra_exercise_no)" style="margin-right: 10px;">加入</button>
+                        </template>
+                        <button v-else type="button" class="btn btn-primary pull-right" disabled>无法加入</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-if="totalSize != 0" class="row text-center">
+            <ul class="pagination">
+                <li v-if="currentPage == 1" class="disabled"><a>&laquo;</a></li>
+                <li v-else><a @click="pageSearchExtraExercise(currentPage-1)">&laquo;</a></li>
+                <template v-for="n in totalPage">
+                    <li v-if="n == currentPage" class="active"><a href="javascript:void(0)">{{ n }}</a></li>
+                    <li v-else><a @click="pageSearchExtraExercise(n)">{{ n }}</a></li>
+                </template>
+                <li v-if="currentPage == totalPage" class="disabled"><a>&raquo;</a></li>
+                <li v-else><a @click="pageSearchExtraExercise(currentPage+1)">&raquo;</a></li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                extraExercises:[],
+                studentExercises:[],
+                currentPage:1,
+                pageSize:0,
+                totalSize:0,
+                totalPage:0,
+                status:""
+            },
+            created:function() {
+                this.$http.post("/student/findExtraExercise",{
+                    page:1,
+                    status:""
+                },{emulateJSON:true}).then(function (data) {
+                    this.extraExercises=data.body.informations;
+                    this.currentPage=data.body.currentPage;
+                    this.pageSize=data.body.pageSize;
+                    this.totalSize=data.body.totalSize;
+                    this.totalPage=data.body.totalPage;
+                });
+                this.$http.post("/student/joinedExtraExercises",{},
+                    {emulateJSON:true}).then(function (data) {
+                    this.studentExercises=data.body;
+                });
+            },
+            methods:{
+                joinExercise:function(extra_exercise_no){
+                    this.$http.post("/student/joinExtraExercise",{
+                        extra_exercise_no:extra_exercise_no
+                    },{emulateJSON:true}).then(function (data) {
+                        alert(data.bodyText);
+                        this.$http.post("/student/joinedExtraExercises",{},
+                            {emulateJSON:true}).then(function (data) {
+                            this.studentExercises=data.body;
+                        });
+                    });
+                },
+                exitExercise:function (extra_exercise_no) {
+                    this.$http.post("/student/exitExtraExercise",{
+                        extra_exercise_no:extra_exercise_no
+                    },{emulateJSON:true}).then(function (data) {
+                        alert(data.bodyText);
+                        this.$http.post("/student/joinedExtraExercises",{},
+                            {emulateJSON:true}).then(function (data) {
+                            this.studentExercises=data.body;
+                        });
+                    });
+                },
+                joinClassObject:function (extra_exercise_no) {
+                    for(var i = 0;i < this.studentExercises.length;i++){
+                        if(this.studentExercises[i] == extra_exercise_no)
+                            return true;
+                    }
+                    return false;
+                },
+                exitClassObject:function (extra_exercise_no) {
+                    for(var i = 0;i < this.studentExercises.length;i++){
+                        if(this.studentExercises[i] == extra_exercise_no)
+                            return false;
+                    }
+                    return true;
+                },
+                searchExtraExercise:function (status) {
+                    this.status = status;
+                    this.$http.post("/student/findExtraExercise",{
+                        page:1,
+                        status:status
+                    },{emulateJSON:true}).then(function (data) {
+                        this.extraExercises = data.body.informations;
+                        this.currentPage=data.body.currentPage;
+                        this.pageSize=data.body.pageSize;
+                        this.totalSize=data.body.totalSize;
+                        this.totalPage=data.body.totalPage;
+                    })
+                },
+                pageSearchExtraExercise:function (page) {
+                    this.$http.post("/student/findExtraExercise",{
+                        page:page,
+                        status:this.status
+                    },{emulateJSON:true}).then(function (data) {
+                        this.extraExercises = data.body.informations;
+                        this.currentPage=data.body.currentPage;
+                        this.pageSize=data.body.pageSize;
+                        this.totalSize=data.body.totalSize;
+                        this.totalPage=data.body.totalPage;
+                    })
+
+                }
+            },
+            computed:{
+
+            }
+        })
+    </script>
+</section>
+
+</body>
+
+</html>

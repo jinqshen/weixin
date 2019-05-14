@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="layout">
+<body>
+<section layout:fragment="content">
+<div id="app" class="container">
+    <div class="row">
+        <div class="col-md-3 col-xs-6">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <span id="gradebar">全部年级</span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                    <li><a @click="searchOrderFinacoByGrade(''),changeGradeBar('全部年级')">全部年级</a></li>
+                    <li><a @click="searchOrderFinacoByGrade('2015'),changeGradeBar('2015级')">2015级</a></li>
+                    <li><a @click="searchOrderFinacoByGrade('2016'),changeGradeBar('2016级')">2016级</a></li>
+                    <li><a @click="searchOrderFinacoByGrade('2017'),changeGradeBar('2017级')">2017级</a></li>
+                    <li><a @click="searchOrderFinacoByGrade('2018'),changeGradeBar('2018级')">2018级</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3 col-xs-6">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <span id="academybar">全部学院</span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a @click="searchOrderFinacoByAcademy(''),changeAcademyBar('全部学院')">全部学院</a></li>
+                <template v-for="academy in academies">
+                    <li><a @click="searchOrderFinacoByAcademy(academy.academy_name),changeAcademyBar(academy.academy_name)">{{academy.academy_name}}</a></li>
+                </template>
+            </ul>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 10px">
+        <div class="col-md-3 col-xs-6">
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#newOrderFinacoModal">新增体测预约</button>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-3" v-for="orderFinaco in orderFinacos">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    {{orderFinaco.for_grade}}级{{orderFinaco.for_academy}}体测预约
+                </div>
+                <div class="panel-body" style="height: 270px">
+                    <label>创建时间：</label>{{orderFinaco.createdTime}}<br />
+                    <label>预约开放时间：</label>{{orderFinaco.order_beginTime}}-{{orderFinaco.order_endTime}}<br />
+                    <label>体测时间：</label>{{orderFinaco.finaco_beginTime}}-{{orderFinaco.finaco_endTime}}<br />
+                    <label>状态：</label>{{orderFinaco.status}}<br />
+                    <label>体测地点：</label>{{orderFinaco.finaco_location}}<br />
+                    <label>体测详情：</label>{{orderFinaco.finaco_describe}}
+                </div>
+                <div class="panel-footer" style="height: 50px;">
+                    <button type="button" class="btn btn-info" @click="editOrderFinaco(orderFinaco.order_class_no)" data-toggle="modal" data-target="#myModal">修改</button>
+                    <button type="button" class="btn btn-danger" @click="deleteOrderFinaco(orderFinaco.order_class_no)">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div v-if="totalSize != 0" class="row text-center">
+        <ul class="pagination">
+            <li v-if="currentPage == 1" class="disabled"><a>&laquo;</a></li>
+            <li v-else><a @click="pageSearchOrderFinacos(currentPage-1)">&laquo;</a></li>
+            <template v-for="n in totalPage">
+                <li v-if="n == currentPage" class="active"><a href="javascript:void(0)">{{ n }}</a></li>
+                <li v-else><a @click="pageSearchOrderFinacos(n)">{{ n }}</a></li>
+            </template>
+            <li v-if="currentPage == totalPage" class="disabled"><a>&raquo;</a></li>
+            <li v-else><a @click="pageSearchOrderFinacos(currentPage+1)">&raquo;</a></li>
+        </ul>
+    </div>
+
+    <!-- 编辑模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        修改体测预约信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form id="updateOrderFinacoForm" class="form-horizontal">
+                        <input type="hidden">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">针对年级</label>
+                            <div class="col-sm-10">
+                                <select v-model="orderFinacoClass.for_grade" class="form-control">
+                                    <option value="">请选择年级</option>
+                                    <option value="2015">2015级</option>
+                                    <option value="2016">2016级</option>
+                                    <option value="2017">2017级</option>
+                                    <option value="2018">2018级</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">针对学院</label>
+                            <div class="col-sm-10">
+                                <select v-model="orderFinacoClass.for_academy" class="form-control">
+                                    <option value="">请选择学院</option>
+                                    <template v-for="academy in academies">
+                                        <option v-bind:value="academy.academy_name">{{academy.academy_name}}</option>
+                                    </template>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">体测预约开始时间</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="orderFinacoClass.order_beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">体测预约结束时间</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="orderFinacoClass.order_endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">体测开始时间</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="orderFinacoClass.finaco_beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">体测结束时间</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="orderFinacoClass.finaco_endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">状态</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" v-model="orderFinacoClass.status">
+                                    <option value="">请选择状态</option>
+                                    <option value="未开放预约">未开放预约</option>
+                                    <option value="体测预约中">体测预约中</option>
+                                    <option value="预约已结束">预约已结束</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">地点</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="orderFinacoClass.finaco_location">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">相关介绍</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" cols="3" v-model="orderFinacoClass.finaco_describe"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" @click="updateOrderFinacoClass()" data-dismiss="modal">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- 新增模态框（Modal） -->
+    <div class="modal fade" id="newOrderFinacoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="newOrderFinacoModalLabel">
+                        新增体测预约信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form id="newOrderFinacoForm" class="form-horizontal">
+                        <input type="hidden">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">针对年级</label>
+                            <div class="col-sm-10">
+                                <select v-model="newOrderFinacoClass.for_grade" class="form-control">
+                                    <option value="">请选择年级</option>
+                                    <option value="2015">2015级</option>
+                                    <option value="2016">2016级</option>
+                                    <option value="2017">2017级</option>
+                                    <option value="2018">2018级</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">针对学院</label>
+                            <div class="col-sm-10">
+                                <div class="col-md-9 col-xs-7">
+                                    <template v-for="(condition,index) in conditions">
+                                        <span>{{condition}}</span>
+                                        <span><button type="button" @click="deleteCondition(index)" class="close" style="float: none">×</button></span>
+                                    </template>
+                                </div>
+                                <div class="col-md-3 col-xs-5">
+                                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        <span>增加学院</span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <template v-for="academy in academies">
+                                            <li><a @click="addCondition(academy.academy_name)">{{academy.academy_name}}</a></li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">体测预约开始时间</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="newOrderFinacoClass.order_beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">体测预约结束时间</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="newOrderFinacoClass.order_endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">体测开始时间</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="newOrderFinacoClass.finaco_beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">体测结束时间</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="newOrderFinacoClass.finaco_endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">状态</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" v-model="newOrderFinacoClass.status">
+                                    <option value="">请选择状态</option>
+                                    <option value="未开放预约">未开放预约</option>
+                                    <option value="体测预约中">体测预约中</option>
+                                    <option value="预约已结束">预约已结束</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">地点</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="newOrderFinacoClass.finaco_location">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">相关介绍</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" cols="3" v-model="newOrderFinacoClass.finaco_describe"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">取消
+                    </button>
+                    <button type="button" class="btn btn-primary" @click="newOrderFinaco_Class()" data-dismiss="modal">
+                        确认发布
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+    <script>
+
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                totalSize:0,
+                totalPage:0,
+                currentPage:1,
+                orderFinacos:[],
+                academies:[],
+                orderFinacoClass:{},
+                newOrderFinacoClass:{for_grade:"",for_academy:"",status:""},
+                conditions:[],
+                for_grade:"",
+                for_academy:""
+            },
+            created:function () {
+                this.$http.post("/manage/orderFinaco",{
+                    page:1,
+                    for_grade:this.for_grade,
+                    for_academy:this.for_academy
+                },{emulateJSON:true}).then(function (data) {
+                    this.totalPage = data.body.totalPage;
+                    this.totalSize = data.body.totalSize;
+                    this.currentPage=data.body.currentPage;
+                    this.orderFinacos = data.body.informations;
+                });
+                this.$http.post("/manage/findAllAcademies",{
+                },{emulateJSON:true}).then(function (data) {
+                    this.academies = data.body;
+                })
+            },
+            methods:{
+                deleteOrderFinaco:function (order_class_no) {
+                    if(confirm("确定删除此课外锻炼活动")){
+                        this.$http.post("/manage/deleteOrderFinaco",{
+                            order_class_no:order_class_no
+                        },{emulateJSON:true}).then(function (data) {
+                            alert(data.bodyText);
+                            this.$http.post("/manage/orderFinaco",{
+                                page:this.currentPage,
+                                for_grade:this.for_grade,
+                                for_academy:this.for_academy
+                            },{emulateJSON:true}).then(function (data) {
+                                this.totalPage = data.body.totalPage;
+                                this.totalSize = data.body.totalSize;
+                                this.currentPage=data.body.currentPage;
+                                this.orderFinacos = data.body.informations;
+                            });
+                        })
+                    }
+                },
+                editOrderFinaco:function (order_class_no) {
+                    this.$http.post("/manage/editOrderFinaco",{
+                        order_class_no:order_class_no
+                    },{emulateJSON:true}).then(function (data) {
+                        this.orderFinacoClass = data.body;
+                    })
+                },
+                updateOrderFinacoClass:function () {
+                    this.$http.post("/manage/updateOrderFinaco",this.orderFinacoClass,{emulateJSON:true}).then(function (data) {
+                        alert(data.bodyText);
+                        this.$http.post("/manage/orderFinaco",{
+                            page:1,
+                            for_grade:this.for_grade,
+                            for_academy:this.for_academy
+                        },{emulateJSON:true}).then(function (data) {
+                            this.totalPage = data.body.totalPage;
+                            this.totalSize = data.body.totalSize;
+                            this.currentPage=data.body.currentPage;
+                            this.orderFinacos = data.body.informations;
+                        });
+                    })
+                },
+                deleteCondition:function (index) {
+                    this.conditions = deleteTheCondition(index);
+                },
+                addCondition:function (academy_name) {
+                    this.conditions.push(academy_name);
+                },
+                newOrderFinaco_Class:function () {
+                    var currentTime = getNowFormatDate();
+                    this.$http.post("/manage/newOrderFinacoClass",{
+                        for_grade:this.newOrderFinacoClass.for_grade,
+                        for_academies:this.conditions,
+                        createdTime:currentTime,
+                        order_beginTime:this.newOrderFinacoClass.order_beginTime,
+                        order_endTime:this.newOrderFinacoClass.order_endTime,
+                        finaco_beginTime:this.newOrderFinacoClass.finaco_beginTime,
+                        finaco_endTime:this.newOrderFinacoClass.finaco_endTime,
+                        finaco_location:this.newOrderFinacoClass.finaco_location,
+                        status:this.newOrderFinacoClass.status,
+                        finaco_describe:this.newOrderFinacoClass.finaco_describe
+                    },{emulateJSON:true}).then(function (data) {
+                        alert(data.bodyText);
+                        this.conditions = [];
+                        this.newOrderFinacoClass = {for_grade:"",for_academy:""};
+                        this.$http.post("/manage/orderFinaco",{
+                            page:1,
+                            for_grade:this.for_grade,
+                            for_academy:this.for_academy
+                        },{emulateJSON:true}).then(function (data) {
+                            this.totalPage = data.body.totalPage;
+                            this.totalSize = data.body.totalSize;
+                            this.currentPage=data.body.currentPage;
+                            this.orderFinacos = data.body.informations;
+                        });
+                    })
+                },
+                pageSearchOrderFinacos:function (page) {
+                    this.$http.post("/manage/orderFinaco",{
+                        page:page,
+                        for_grade:this.for_grade,
+                        for_academy:this.for_academy
+                    },{emulateJSON:true}).then(function (data) {
+                        this.totalPage = data.body.totalPage;
+                        this.totalSize = data.body.totalSize;
+                        this.currentPage=data.body.currentPage;
+                        this.orderFinacos = data.body.informations;
+                        scrollTo(0,0);
+                    });
+                },
+                searchOrderFinacoByAcademy:function (academyName) {
+                    this.for_academy = academyName;
+                    this.$http.post("/manage/orderFinaco",{
+                        page:1,
+                        for_grade:this.for_grade,
+                        for_academy:this.for_academy
+                    },{emulateJSON:true}).then(function (data) {
+                        this.totalPage = data.body.totalPage;
+                        this.totalSize = data.body.totalSize;
+                        this.currentPage=data.body.currentPage;
+                        this.orderFinacos = data.body.informations;
+                    });
+                },
+                searchOrderFinacoByGrade:function (grade) {
+                    this.for_grade = grade;
+                    this.$http.post("/manage/orderFinaco",{
+                        page:1,
+                        for_grade:this.for_grade,
+                        for_academy:this.for_academy
+                    },{emulateJSON:true}).then(function (data) {
+                        this.totalPage = data.body.totalPage;
+                        this.totalSize = data.body.totalSize;
+                        this.currentPage=data.body.currentPage;
+                        this.orderFinacos = data.body.informations;
+                    });
+                }
+            }
+        })
+
+        //获取当前时间
+        function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var strDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+            return currentdate;
+        }
+
+        //根据index删除数组元素
+        function deleteTheCondition(index) {
+            var conditionList = [];
+            for(var i = 0;i < vm.$data.conditions.length;i++){
+                if(i != index){
+                    conditionList.push(vm.$data.conditions[i]);
+                }
+            }
+            return conditionList;
+        }
+
+        function changeGradeBar(grade) {
+            $("#gradebar").text(grade);
+        }
+
+        function changeAcademyBar(academy_name) {
+            $("#academybar").text(academy_name);
+        }
+    </script>
+</section>
+</body>
+</html>

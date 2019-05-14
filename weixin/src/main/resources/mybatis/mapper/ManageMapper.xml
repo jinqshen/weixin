@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jinqshen.weixin.mapper.ManageMapper">
+
+	<select id="findTheManageAccount" resultType="com.jinqshen.weixin.pojo.table.ManageAccount">
+		select *
+		from manage_account
+		<where>
+			manage_username = #{manage_username} and manage_password = #{manage_password}
+		</where>
+	</select>
+
+	<select id="findTheManageAccountByUserName" resultType="com.jinqshen.weixin.pojo.table.ManageAccount">
+		select *
+		from manage_account
+		<where>
+			manage_username = #{manage_username}
+		</where>
+	</select>
+
+	<update id="updateManagePassword">
+		update manage_account
+		<set>
+			manage_password = #{manage_password}
+		</set>
+		<where>
+			manage_username = #{manage_username}
+		</where>
+	</update>
+
+	<insert id="insertManageAccount">
+		insert
+		into manage_account(manage_username,manage_password)
+		values(#{manage_username},#{manage_password})
+	</insert>
+
+</mapper>

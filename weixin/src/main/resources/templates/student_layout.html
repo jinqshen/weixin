@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="htmlhead">
+    <meta charset="utf-8"></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+    <meta name="renderer" content="webkit" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <meta name="description" content=""></meta>
+    <meta name="author" content=""></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"></meta>
+    <link rel="icon" href="/image/hfut.jpg" type="image/jpg" />
+    <title >大学生体测管理系统</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/font-awesome-4.7.0/css/font-awesome.css" />
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <script src="/js/echarts/echarts.min.js"></script>
+</head>
+
+<body>
+<div th:replace="/fragment/student_header::student_header">Header</div>
+<div layout:fragment="content" id="content"></div>
+<div class="container"  role="navigation">
+    <div th:replace="/fragment/student_footer::student_footer">Footer</div>
+</div>
+</body>
+<script>
+    new Vue({
+        el:'#headapp',
+        data:{
+            loginStudent:{},
+            newpassword:"",
+            renewpassword:""
+        },
+        created:function () {
+            this.$http.post("/student/getLoginStudentInfo",{},{emulateJSON:true}).then(function (data) {
+                this.loginStudent = data.body;
+            })
+        },
+        methods:{
+            newPassword:function () {
+                if(this.newpassword == this.renewpassword){
+                    this.$http.post("/student/newPassword",{
+                        newpassword:this.newpassword
+                    },{emulateJSON:true}).then(function (data) {
+                        alert(data.bodyText);
+                    })
+                }else{
+                    alert("两次密码输入不一致");
+                }
+
+            }
+        }
+    })
+</script>
+</html>

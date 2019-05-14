@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="layout">
+<body>
+<section layout:fragment="content">
+<div id="app" class="container">
+    <div class="row">
+        <button @click="searchExtraExercise('')" type="button" class="btn btn-default">全部</button>
+        <button @click="searchExtraExercise('报名中')" type="button" class="btn btn-default">报名中</button>
+        <button @click="searchExtraExercise('进行中')" type="button" class="btn btn-default">进行中</button>
+        <button @click="searchExtraExercise('已结束')" type="button" class="btn btn-default">已结束</button>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#newExtraExerciseModal">发布新课外锻炼活动</button>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-3" v-for="extraExercise in extraExercises">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    {{ extraExercise.project }}
+                </div>
+                <div class="panel-body" style="height: 270px">
+                    <label>创建时间：</label>{{extraExercise.createTime}}<br />
+                    <label>起止时间：</label>{{extraExercise.beginTime}}-{{extraExercise.endTime}} <br />
+                    <label>介绍：</label>{{extraExercise.introduce}}<br />
+                    <label>教师：</label>{{extraExercise.teacher}}<br />
+                    <label>状态：</label>{{extraExercise.status}}<br />
+                    <label>地点：</label>{{extraExercise.location}}<br />
+                    <label>容量：</label>{{extraExercise.capacity}}
+                </div>
+                <div class="panel-footer" style="height: 50px;">
+                    <button type="button" class="btn btn-danger pull-right" @click="deleteExercise(extraExercise.extra_exercise_no)">删除</button>
+                    <button type="button" class="btn btn-info pull-right" @click="editExercise(extraExercise.extra_exercise_no)" style="margin-right: 10px;" data-toggle="modal" data-target="#myModal">修改</button>
+                    <button type="button" class="btn btn-info pull-right" @click="exerciseInfo(extraExercise.extra_exercise_no)" style="margin-right: 10px;" data-toggle="modal" data-target="#detailModal">详情</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-if="totalSize != 0" class="row text-center">
+        <ul class="pagination">
+            <li v-if="currentPage == 1" class="disabled"><a>&laquo;</a></li>
+            <li v-else><a @click="pageSearchExtraExercise(currentPage-1)">&laquo;</a></li>
+            <template v-for="n in totalPage">
+                <li v-if="n == currentPage" class="active"><a href="javascript:void(0)">{{ n }}</a></li>
+                <li v-else><a @click="pageSearchExtraExercise(n)">{{ n }}</a></li>
+            </template>
+            <li v-if="currentPage == totalPage" class="disabled"><a>&raquo;</a></li>
+            <li v-else><a @click="pageSearchExtraExercise(currentPage+1)">&raquo;</a></li>
+        </ul>
+    </div>
+    <!-- 编辑模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        修改课外锻炼活动信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form id="updateExerciseForm" class="form-horizontal">
+                        <input type="hidden">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">课外锻炼项目</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="extraExercise.project">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">开始时间</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="extraExercise.beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">结束时间</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="extraExercise.endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">活动介绍</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" rows="3" v-model="extraExercise.introduce"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">指导老师</label>
+                            <div class="col-sm-10">
+                                <input  class="form-control" type="text" v-model="extraExercise.teacher">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">地点</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="extraExercise.location">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">容量</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="extraExercise.capacity">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" @click="updateExercise()" data-dismiss="modal">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- 发布新课外锻炼活动模态框（Modal） -->
+    <div class="modal fade" id="newExtraExerciseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="newExtraExerciseModalLabel">
+                        新增课外锻炼活动
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form id="newExerciseForm" class="form-horizontal">
+                        <input type="hidden">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">课外锻炼项目</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="newExtraExercise.project">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">开始时间</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="newExtraExercise.beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">结束时间</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="newExtraExercise.endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">活动介绍</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" rows="3" v-model="newExtraExercise.introduce"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">指导老师</label>
+                            <div class="col-sm-10">
+                                <input  class="form-control" type="text" v-model="newExtraExercise.teacher">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">地点</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="newExtraExercise.location">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">容量</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" v-model="newExtraExercise.capacity">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" @click="newExercise()" data-dismiss="modal">
+                        确认发布
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+</div>
+<!-- 课外活动名单模态框（Modal） -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×
+                </button>
+                <h4 class="modal-title" id="detailModalLabel">
+                    活动参与人员名单
+                </h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-hover">
+                    <caption class="text-center">参与人数{{totalSize}}/{{extra_Exercise.capacity}}</caption>
+                    <thead>
+                    <tr>
+                        <th class="text-center">学号</th>
+                        <th class="text-center">姓名</th>
+                        <th class="text-center">专业</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="student in studentInfos">
+                            <td>{{student.student_number}}</td>
+                            <td>{{student.name}}</td>
+                            <td>{{student.major}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div v-if="totalSize != 0" class="row text-center">
+                <ul class="pagination">
+                    <li v-if="currentPage == 1" class="disabled"><a>&laquo;</a></li>
+                    <li v-else><a @click="pageSearchStudentInfos(currentPage-1)">&laquo;</a></li>
+                    <template v-for="n in totalPage">
+                        <li v-if="n == currentPage" class="active"><a href="javascript:void(0)">{{ n }}</a></li>
+                        <li v-else><a @click="pageSearchStudentInfos(n)">{{ n }}</a></li>
+                    </template>
+                    <li v-if="currentPage == totalPage" class="disabled"><a>&raquo;</a></li>
+                    <li v-else><a @click="pageSearchStudentInfos(currentPage+1)">&raquo;</a></li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" v-bind:href="'/manage/exportJoinedStudentInfos?extra_exercise_no=' + extra_Exercise.extra_exercise_no">导出信息</a>
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            extraExercises:[],
+            studentExercises:[],
+            extraExercise:{},
+            newExtraExercise:{},
+            currentPage:1,
+            pageSize:0,
+            totalSize:0,
+            totalPage:0,
+            status:"",
+            teacher:""
+        },
+        created:function() {
+            this.$http.post("/manage/searchExtraExercise",{
+                page:1,
+                status:"",
+                teacher:""
+            },{emulateJSON:true}).then(function (data) {
+                this.extraExercises=data.body.informations;
+                this.currentPage=data.body.currentPage;
+                this.pageSize=data.body.pageSize;
+                this.totalSize=data.body.totalSize;
+                this.totalPage=data.body.totalPage;
+            });
+        },
+        methods:{
+            editExercise:function(extra_exercise_no){
+                this.$http.post("/manage/editExtraExercise",{
+                    extra_exercise_no:extra_exercise_no
+                },{emulateJSON:true}).then(function (data) {
+                    this.extraExercise = data.body;
+                })
+            },
+            updateExercise:function(){
+                var currentTime = getNowFormatDate();
+                this.$http.post("/manage/updateExtraExercise",{
+                    extra_exercise_no:this.extraExercise.extra_exercise_no,
+                    project:this.extraExercise.project,
+                    createTime:currentTime,
+                    beginTime:this.extraExercise.beginTime,
+                    endTime:this.extraExercise.endTime,
+                    introduce:this.extraExercise.introduce,
+                    teacher:this.extraExercise.teacher,
+                    status:'报名中',
+                    location:this.extraExercise.location,
+                    capacity:this.extraExercise.capacity
+                },{emulateJSON:true}).then(function (data) {
+                    alert(data.bodyText);
+                    this.$http.post("/manage/searchExtraExercise",{
+                        page:1,
+                        status:"",
+                        teacher:""
+                    },{emulateJSON:true}).then(function (data) {
+                        this.extraExercises=data.body.informations;
+                        this.currentPage=data.body.currentPage;
+                        this.pageSize=data.body.pageSize;
+                        this.totalSize=data.body.totalSize;
+                        this.totalPage=data.body.totalPage;
+                    });
+                })
+            },
+            deleteExercise:function(extra_exercise_no){
+                if(confirm('确定删除此课外锻炼活动')) {
+                    this.$http.post("/manage/deleteTheExtraExercise", {
+                        extra_exercise_no: extra_exercise_no
+                    }, {emulateJSON: true}).then(function (data) {
+                        alert(data.bodyText);
+                        this.$http.post("/manage/searchExtraExercise", {
+                            page: 1,
+                            status: "",
+                            teacher: ""
+                        }, {emulateJSON: true}).then(function (data) {
+                            this.extraExercises = data.body.informations;
+                            this.currentPage = data.body.currentPage;
+                            this.pageSize = data.body.pageSize;
+                            this.totalSize = data.body.totalSize;
+                            this.totalPage = data.body.totalPage;
+                        });
+                    })
+                }
+            },
+            newExercise:function(){
+                var currentTime = getNowFormatDate();
+                this.$http.post("/manage/newExtraExercise",{
+                    extra_exercise_no:0,
+                    project:this.newExtraExercise.project,
+                    createTime:currentTime,
+                    beginTime:this.newExtraExercise.beginTime,
+                    endTime:this.newExtraExercise.endTime,
+                    introduce:this.newExtraExercise.introduce,
+                    teacher:this.newExtraExercise.teacher,
+                    status:'报名中',
+                    location:this.newExtraExercise.location,
+                    capacity:this.newExtraExercise.capacity
+                },{emulateJSON:true}).then(function (data) {
+                    alert(data.bodyText);
+                    this.newExtraExercise = {};
+                    this.$http.post("/manage/searchExtraExercise",{
+                        page:1,
+                        status:"",
+                        teacher:""
+                    },{emulateJSON:true}).then(function (data) {
+                        this.extraExercises=data.body.informations;
+                        this.currentPage=data.body.currentPage;
+                        this.pageSize=data.body.pageSize;
+                        this.totalSize=data.body.totalSize;
+                        this.totalPage=data.body.totalPage;
+                    });
+                })
+            },
+            exerciseInfo:function(extra_exercise_no){
+                detail.$data.extra_exercise_no = extra_exercise_no;
+                this.$http.post("/manage/editExtraExercise",{
+                    extra_exercise_no:extra_exercise_no
+                },{emulateJSON:true}).then(function (data) {
+                    detail.$data.extra_Exercise = data.body;
+                });
+                this.$http.post("/manage/findJoinedStudentInfos",{
+                    page:1,
+                    extra_exercise_no:extra_exercise_no
+                },{emulateJSON:true}).then(function (data) {
+                    detail.$data.studentInfos = data.body.informations;
+                    detail.$data.currentPage = data.body.currentPage;
+                    detail.$data.totalSize = data.body.totalSize;
+                    detail.$data.totalPage = data.body.totalPage;
+                })
+            },
+            searchExtraExercise:function (status) {
+                this.status = status;
+                this.$http.post("/manage/searchExtraExercise",{
+                    page:1,
+                    status:status
+                },{emulateJSON:true}).then(function (data) {
+                    this.extraExercises = data.body.informations;
+                    this.currentPage=data.body.currentPage;
+                    this.pageSize=data.body.pageSize;
+                    this.totalSize=data.body.totalSize;
+                    this.totalPage=data.body.totalPage;
+                })
+            },
+            pageSearchExtraExercise:function (page) {
+                this.$http.post("/manage/searchExtraExercise",{
+                    page:page,
+                    status:this.status,
+                    teacher:this.teacher
+                },{emulateJSON:true}).then(function (data) {
+                    this.extraExercises = data.body.informations;
+                    this.currentPage=data.body.currentPage;
+                    this.pageSize=data.body.pageSize;
+                    this.totalSize=data.body.totalSize;
+                    this.totalPage=data.body.totalPage;
+                    scrollTo(0,0);
+                })
+
+            }
+        },
+        computed:{
+
+        }
+    })
+
+    var detail = new Vue({
+        el:'#detailModal',
+        data:{
+            extra_exercise_no:"",
+            studentInfos:[],
+            extra_Exercise:{},
+            totalSize:0,
+            totalPage:0,
+            currentPage:1
+        },
+        methods:{
+            pageSearchStudentInfos:function (page) {
+                this.$http.post("/manage/findJoinedStudentInfos",{
+                    page:page,
+                    extra_exercise_no:this.extra_exercise_no
+                },{emulateJSON:true}).then(function (data) {
+                    this.studentInfos = data.body.informations;
+                    this.currentPage = data.body.currentPage;
+                    this.totalSize = data.body.totalSize;
+                    this.totalPage = data.body.totalPage;
+                })
+            }
+        }
+    })
+
+    function getNowFormatDate() {//获取当前时间
+        var date = new Date();
+        var seperator1 = "-";
+        var seperator2 = ":";
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var strDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+            + " " + date.getHours() + seperator2 + date.getMinutes()
+            + seperator2 + date.getSeconds();
+        return currentdate;
+    }
+</script>
+</section>
+</body>
+
+</html>

@@ -7,12 +7,7 @@ import java.sql.Date;
  * @author jinqshen
  *
  */
-public class StudentInfo implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6962196048936593102L;
+public class StudentInfo{
 	
 	//学号
 	private Integer student_number;

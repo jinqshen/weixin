@@ -1,4 +1,4 @@
-/*package com.jinqshen.weixin;
+package com.jinqshen.weixin;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -19,4 +19,4 @@ public class WebConfiguration {
         registration.setOrder(1);
         return registration;
     }
-}*/
+}

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jinqshen.weixin.mapper.ManageOrderFinacoMapper">
+
+	<select id="findAllOrderFinaco" resultType="com.jinqshen.weixin.pojo.table.OrderFinaco">
+		select *
+		from order_finaco
+		<where>
+			1 = 1
+		</where>
+	</select>
+
+	<select id="findCountOfOrderFinacos" resultType="java.lang.Integer">
+		select count(*)
+		from order_finaco
+		<where>
+			1 = 1
+			<if test="for_grade != null and for_grade != ''">
+				and for_grade = #{for_grade}
+			</if>
+			<if test="for_academy != null and for_academy != ''">
+				and for_academy = #{for_academy}
+			</if>
+		</where>
+	</select>
+
+	<select id="findOrderFinacos" resultType="com.jinqshen.weixin.pojo.table.OrderFinaco">
+		select *
+		from order_finaco
+		<where>
+			1 = 1
+			<if test="for_grade != null and for_grade != ''">
+				and for_grade = #{for_grade}
+			</if>
+			<if test="for_academy != null and for_academy != ''">
+				and for_academy = #{for_academy}
+			</if>
+		</where>
+		limit #{beginNumber},#{pageSize}
+	</select>
+
+	<select id="findOrderFinaco" parameterType="java.lang.Integer" resultType="com.jinqshen.weixin.pojo.table.OrderFinaco">
+		select *
+		from order_finaco
+		<where>
+			order_class_no = #{order_class_no}
+		</where>
+	</select>
+
+    <select id="findOrderFinacoByGradeAndAcademy" resultType="com.jinqshen.weixin.pojo.table.OrderFinaco">
+        select *
+        from order_finaco
+        <where>
+            for_grade = #{for_grade} and for_academy = #{for_academy}
+        </where>
+    </select>
+
+	<delete id="deleteStudentFinacoByOrderClassNo" parameterType="java.lang.Integer">
+		delete
+		from student_finaco
+		<where>
+			order_class_no = #{order_class_no}
+		</where>
+	</delete>
+
+	<delete id="deleteOrderFinacoByOrderClassNo" parameterType="java.lang.Integer">
+		delete
+		from order_finaco
+		<where>
+			order_class_no = #{order_class_no}
+		</where>
+	</delete>
+
+    <update id="updateOrderFinaco" parameterType="com.jinqshen.weixin.pojo.table.OrderFinaco">
+        update order_finaco
+        <set>
+            for_grade = #{for_grade},for_academy = #{for_academy},order_beginTime = #{order_beginTime},order_endTime = #{order_endTime},
+            finaco_beginTime = #{finaco_beginTime},finaco_endTime = #{finaco_endTime},status = #{status},finaco_location = #{finaco_location},
+            finaco_describe = #{finaco_describe}
+        </set>
+        <where>
+            order_class_no = #{order_class_no}
+        </where>
+    </update>
+
+	<insert id="insertOrderFinaco" parameterType="com.jinqshen.weixin.pojo.table.OrderFinaco">
+		insert
+		into order_finaco(for_grade,for_academy,order_beginTime,order_endTime,createdTime,finaco_beginTime,finaco_endTime,status,finaco_location,finaco_describe)
+		values (#{for_grade},#{for_academy},#{order_beginTime},#{order_endTime},#{createdTime},#{finaco_beginTime},#{finaco_endTime},#{status},#{finaco_location},#{finaco_describe})
+	</insert>
+</mapper>

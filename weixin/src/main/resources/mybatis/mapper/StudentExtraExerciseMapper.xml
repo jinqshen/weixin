@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jinqshen.weixin.mapper.StudentExtraExerciseMapper">
+
+	<select id="findCountOfExtraExercises" resultType="java.lang.Integer">
+		select COUNT(*)
+		from extra_exercise
+		<where>
+			<if test="status == ''">
+				1 = 1
+			</if>
+			<if test="status != ''">
+			  	status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<select id="findExtraExercises" resultType="com.jinqshen.weixin.pojo.table.ExtraExercise">
+		select extra_exercise_no,project,introduce,date_format(createTime, '%Y-%m-%d %H:%i:%s') createTime,date_format(beginTime, '%Y-%m-%d %H:%i:%s') beginTime,date_format(endTime, '%Y-%m-%d %H:%i:%s') endTime,teacher,capacity,location,status
+		from extra_exercise
+		<where>
+			<if test="status == ''">
+				1 = 1
+			</if>
+			<if test="status != ''">
+				status = #{status}
+			</if>
+		</where>
+		limit #{beginNumber},#{pageSize}
+	</select>
+
+	<select id="findCapacityOfExtraExercise" resultType="java.lang.Integer">
+		select capacity
+		from extra_exercise
+		<where>
+			extra_exercise_no = #{extra_exercise_no}
+		</where>
+	</select>
+
+    <select id="findJoinedExtraExercise" resultType="java.lang.Integer">
+        select extra_exercise_no
+        from student_exercise
+        <where>
+            student_number = #{student_number}
+        </where>
+    </select>
+
+	<select id="findSizeOfJoined" resultType="java.lang.Integer">
+		select count(*)
+		from student_exercise
+		<where>
+			extra_exercise_no = #{extra_exercise_no}
+		</where>
+	</select>
+
+	<insert id="insertStudent_Exercise">
+		insert
+		into student_exercise(student_number,extra_exercise_no)
+		values (#{student_number},#{extra_exercise_no})
+	</insert>
+
+	<delete id="deleteStudent_Exercise">
+		delete
+		from student_exercise
+		<where>
+			student_number = #{student_number} and extra_exercise_no = #{extra_exercise_no}
+		</where>
+	</delete>
+
+</mapper>

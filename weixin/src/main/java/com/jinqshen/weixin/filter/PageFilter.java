@@ -19,18 +19,34 @@ public class PageFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) srequest;
 		String uri = request.getRequestURI();
-		if(request.getSession().getAttribute(Const.LoginUser.getValue()) == null) {
-			if(containsKey(uri) || containsSuffix(uri)) {
-				filterChain.doFilter(srequest, sresponse);
-				return;
+		if(uri.contains("manage")){
+			if(request.getSession().getAttribute(Const.LoginManageUser.getValue()) == null){
+				if(containsKey(uri) || containsSuffix(uri)) {
+					filterChain.doFilter(srequest, sresponse);
+					return;
+				}else {
+					HttpServletResponse response = (HttpServletResponse) sresponse;
+					String url = "/manage/login";
+					response.sendRedirect(url);
+				}
 			}else {
-				HttpServletResponse response = (HttpServletResponse) sresponse;
-				String url = "/login";
-				response.sendRedirect(url);
+				filterChain.doFilter(srequest, sresponse);
 			}
 		}else {
-			filterChain.doFilter(srequest, sresponse);
+			if(request.getSession().getAttribute(Const.LoginUser.getValue()) == null) {
+				if(containsKey(uri) || containsSuffix(uri)) {
+					filterChain.doFilter(srequest, sresponse);
+					return;
+				}else {
+					HttpServletResponse response = (HttpServletResponse) sresponse;
+					String url = "/student/loginPage";
+					response.sendRedirect(url);
+				}
+			}else {
+				filterChain.doFilter(srequest, sresponse);
+			}
 		}
+
 
 	}
 	
@@ -43,6 +59,7 @@ public class PageFilter implements Filter {
 		if (url.endsWith(".js")
 				|| url.endsWith(".css")
 				|| url.endsWith(".jpg")
+				|| url.endsWith(".jpeg")
 				|| url.endsWith(".gif")
 				|| url.endsWith(".png")
 				|| url.endsWith(".html")
@@ -66,6 +83,10 @@ public class PageFilter implements Filter {
 	private boolean containsKey(String url) {
 		if(url.contains("/student/login")
 			|| url.contains("/student/register")
+			|| url.contains("/wx")
+			|| url.contains("/student/loginPage")
+			|| url.contains("/manage/login")
+			|| url.contains("/manage/loginValidate")
 			|| url.contains("/login")
 			|| url.contains("/register"))
 			return true;

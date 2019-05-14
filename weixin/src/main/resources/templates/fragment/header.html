@@ -1,33 +1,132 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-     <header class="topnavbar-wrapper" th:fragment="header">
-	<nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #4e7dc0;" role="navigation">
+	<header id="head" class="topnavbar-wrapper" th:fragment="header">
+	<nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #23b7e5;" role="navigation">
 		<div class="container">
-			<div class="navbar-header">
-				<a href="/bookList" class="navbar-brand">
-					<span><img class="navbar-logo" src="/image/logo.png" alt="managelogo"></span>
-				</a>
-				
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#system-menu">
-					<span class="sr-only">Menu Toggle</span>
-					<span class="icon-bar white-icon-bar"></span>
-					<span class="icon-bar white-icon-bar"></span>
-					<span class="icon-bar white-icon-bar"></span>
-				</button>
-			</div>
-			
-			<div class="collapse navbar-collapse" id="system-menu">
-				<ul class="nav navbar-nav navbar-right">
-					<li><a onclick="locationUrl('/bookList','bookList')">学生成绩管理</a></li>
-					<li><a onclick="locationUrl('/importData','')">学生成绩导入</a></li>
-					<li><a href="/manage/studentInfoList">学生信息管理</a></li>
-					<li><a href="#">体测预约安排</a></li>
-				</ul>
+			<div class="row">
+				<div class="navbar-header">
+					<div class="col-md-4 col-xs-3">
+						<a href="/manage/finacoTestResult" class="navbar-brand">
+							<span><img class="navbar-logo" src="/image/logo.png" alt="managelogo"></span>
+						</a>
+					</div>
+					<div class="col-md-8 col-xs-7 dropdown" style="margin-top: 6px;" >
+						<span style="color: #FFFFFF">欢迎你,{{username}}</span>
+						<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+							<img src="/image/headportrait.jpeg" class="img-circle" style="width: 44px">
+							<span class="caret" style="color: #ffffff"></span>
+						</a>
+						<ul class="dropdown-menu" style="margin-top: 9px">
+							<li><a href="javascript:void(0)" data-toggle="modal" data-target="#addManageAccountModal"><span class="fa fa-user-plus"></span>&nbsp;增加管理员</a></li>
+							<li><a href="javascript:void(0)" data-toggle="modal" data-target="#newPasswordModal"><span class="fa fa-edit" ></span>&nbsp;修改密码</a></li>
+							<li><a href="/manage/logout"><span class="fa fa-power-off"></span>&nbsp;注销</a></li>
+						</ul>
+					</div>
+
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#system-menu">
+						<span class="sr-only">Menu Toggle</span>
+						<span class="icon-bar white-icon-bar"></span>
+						<span class="icon-bar white-icon-bar"></span>
+						<span class="icon-bar white-icon-bar"></span>
+					</button>
+				</div>
+
+				<div class="collapse navbar-collapse" id="system-menu">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="/manage/finacoTestResult"><span class="fa fa-info-circle"></span>&nbsp;学生成绩管理</a></li>
+						<li><a href="/manage/extraExercise"><span class="fa fa-soccer-ball-o"></span>&nbsp;课外锻炼活动管理</a></li>
+						<li><a href="/manage/studentInfoList"><span class="fa fa-info-circle"></span>&nbsp;学生信息管理</a></li>
+						<li><a href="/manage/orderFinacoView"><span class="fa fa-clock-o"></span>&nbsp;体测预约安排</a></li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</nav>
+	<div class="modal fade" id="newPasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">×
+					</button>
+					<h4 class="modal-title" id="newPasswordModalLabel">
+						修改密码
+					</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="control-label col-sm-2">新密码</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="password" v-model="newpassword">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2">确认密码</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="password" v-model="renewpassword">
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default"
+							data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" @click="newPassword()" data-dismiss="modal">
+						确认修改
+					</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
+	<!--新增管理员模态框-->
+	<div class="modal fade" id="addManageAccountModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">×
+					</button>
+					<h4 class="modal-title" id="addManageAccountModalLabel">
+						新增管理员
+					</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="control-label col-sm-2">用户名</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="text" v-model="newManageAccount.manage_username">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2">密码</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="password" v-model="newManageAccount.manage_password">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2">确认密码</label>
+							<div class="col-sm-10">
+								<input class="form-control" type="password" v-model="newManageAccount.remanage_password">
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default"
+							data-dismiss="modal">取消
+					</button>
+					<button type="button" class="btn btn-primary" @click="addManageAccount()" data-dismiss="modal">
+						增加
+					</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
    </header>
 
 </body>

@@ -27,7 +27,7 @@
 				</if>
 				<if test="item.conditionName != null and item.conditionName != ''">
 					<if test="item.conditionName == 'student_number'">
-						student_number = #{item.conditionValue}
+						student_number like "%"#{item.conditionValue}"%"
 					</if>
 					<if test="item.conditionName == 'name'">
 						name like "%"#{item.conditionValue}"%"
@@ -65,7 +65,7 @@
 				</if>
 				<if test="item.conditionName != null and item.conditionName != ''">
 					<if test="item.conditionName == 'student_number'">
-						student_number = #{item.conditionValue}
+						student_number like "%"#{item.conditionValue}"%"
 					</if>
 					<if test="item.conditionName == 'name'">
 						name like "%"#{item.conditionValue}"%"

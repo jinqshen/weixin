@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="student_layout">
+<body>
+<section layout:fragment="content">
+    <div id="app" class="container">
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <a href="/student/transcript" class="btn btn-primary">表格显示</a>
+        </div>
+        <hr>
+        <div class="row">
+            <div id="chart" class="col-xs-12 col-md-12" style="height: 370px">
+
+            </div>
+        </div>
+    </div>
+    <script>
+        var v =  new Vue({
+            el:'#app',
+            data:{
+                finacoTranscripts:{},
+                isNewest:false,
+                loginStudent:{}
+            },
+            created:function(){
+                var t = 0;
+                this.$http.post("/student/finacoTranscript",{
+                    isNewest:this.isNewest
+                },{emulateJSON:true}).then(function (data) {
+                    this.finacoTranscripts = data.body;
+                    for(var i in this.finacoTranscripts){
+                        semesters.push(i);
+                        for(var j in this.finacoTranscripts[i]){
+                            if(this.finacoTranscripts[i][j].project_name != '身高' && this.finacoTranscripts[i][j].project_name != '体重' && this.finacoTranscripts[i][j].project_name != 'BMI指数' && this.finacoTranscripts[i][j].project_name != '肺活量'){
+                                names.push(this.finacoTranscripts[i][j].project_name);
+                                values.push(this.finacoTranscripts[i][j].score);
+                            }
+                        }
+
+                        option.xAxis.data = names;
+                        //设置series属性
+                        option.series.push({
+                                'name':i,
+                                'type':'bar',
+                                'color':colors[t++],
+                                'data':values
+                        });
+                        names = [];
+                        values = [];
+                    }
+                    option.legend.data = semesters;
+
+                    myChart.setOption(option);
+                    myChart.hideLoading();
+                });
+                this.$http.post("/student/getLoginStudentInfo",{},{emulateJSON:true}).then(function (data) {
+                    this.loginStudent = data.body;
+                });
+
+            },
+            methods:{
+                findAllFinacoTranscript:function () {
+                    this.isNewest = false
+                    this.$http.post("/student/finacoTranscript",{
+                        isNewest:this.isNewest
+                    },{emulateJSON:true}).then(function (data) {
+                        this.finacoTranscripts = data.body;
+                    })
+                },
+                findNewestFinacoTranscript:function () {
+                    this.isNewest = true;
+                    this.$http.post("/student/finacoTranscript",{
+                        isNewest:this.isNewest
+                    },{emulateJSON:true}).then(function (data) {
+                        this.finacoTranscripts = data.body;
+                    })
+                }
+            }
+        })
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('chart'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: '成绩单'
+            },
+            tooltip: {},
+            toolbox: {
+                show : true,
+                feature : {
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            legend: {
+                data:[]
+            },
+            xAxis: {
+                data: [],
+                axisLabel: {
+                    interval:0,      //坐标轴刻度标签的显示间隔(在类目轴中有效) 0:显示所有  1：隔一个显示一个 :3：隔三个显示一个...
+                    rotate:-20    //标签倾斜的角度，显示不全时可以通过旋转防止标签重叠（-90到90）
+                }
+            },
+            yAxis: {},
+            series: []
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        //Loading动画
+        myChart.showLoading();
+
+        var semesters = [];
+        var names = [];
+        var values = [];
+        var colors = ['#000000','#20655d','#20655d','#20655d'];
+
+
+
+    </script>
+</section>
+</body>
+
+</html>

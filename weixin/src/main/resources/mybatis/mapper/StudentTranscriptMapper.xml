@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jinqshen.weixin.mapper.StudentTranscriptMapper">
+
+	<select id="findTheProjectTranscript_b" resultType="com.jinqshen.weixin.vo.Transcript">
+		select student_number,name,project_name,score,test_result_describe,level
+		from finaco_transcript_b
+		<where>
+			student_number = #{student_number} and project_name = #{project_name} and semester = #{semester}
+		</where>
+	</select>
+
+	<select id="findExistSemester" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select distinct semester
+		from finaco
+		<where>
+			student_number = #{student_number}
+		</where>
+	</select>
+
+	<select id="findTheProjectTranscript_g" resultType="com.jinqshen.weixin.vo.Transcript">
+		select student_number,name,project_name,score,test_result_describe,level
+		from finaco_transcript_g
+		<where>
+			student_number = #{student_number} and project_name = #{project_name} and semester = #{semester}
+		</where>
+	</select>
+
+	<select id="findStudent" resultType="com.jinqshen.weixin.pojo.table.StudentInfo">
+		select *
+		from student_info
+		<where>
+			student_number = #{student_number}
+		</where>
+	</select>
+
+	<select id="findBMILevel_b" resultType="java.lang.String">
+		select distinct level
+		from boy_standard
+		<where>
+			#{bmi} &gt;= head and #{bmi} &lt; tail and project_no=100110
+		</where>
+	</select>
+
+	<select id="findBMILevel_g" resultType="java.lang.String">
+		select distinct level
+		from girl_standard
+		<where>
+			#{bmi} &gt;= head and #{bmi} &lt; tail and project_no=100110
+		</where>
+	</select>
+
+	<select id="findVital_CapacitLevel_b" resultType="java.lang.String">
+		select distinct level
+		from boy_standard
+		<where>
+			#{vital_capacit_value} &gt;= head and #{vital_capacit_value} &lt; tail and project_no=100120
+		</where>
+	</select>
+
+	<select id="findVital_CapacitLevel_g" resultType="java.lang.String">
+		select distinct level
+		from girl_standard
+		<where>
+			#{vital_capacit_value} &gt;= head and #{vital_capacit_value} &lt; tail and project_no=100120
+		</where>
+	</select>
+
+	<select id="findVital_CapacitScore_b" resultType="java.lang.Integer">
+		select distinct score
+		from boy_standard
+		<where>
+			#{vital_capacit_value} &gt;= head and #{vital_capacit_value} &lt; tail and project_no=100120
+		</where>
+	</select>
+
+	<select id="findVital_CapacitScore_g" resultType="java.lang.Integer">
+		select distinct score
+		from girl_standard
+		<where>
+			#{vital_capacit_value} &gt;= head and #{vital_capacit_value} &lt; tail and project_no=100120
+		</where>
+	</select>
+</mapper>

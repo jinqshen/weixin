@@ -36,52 +36,83 @@
 						</select>
 						<select id="majoropt0" class="form-control">
 							<option value ="">请选择专业</option>
-							<option value ="信息与计算科学">信息与计算科学</option>
-							<option value ="数学与应用数学">数学与应用数学</option>
-							<option value ="统计学">统计学</option>
-						</select>
-					</div>
-				</div>
-				<div class="col-md-1 form-group">
-					<button class="btn btn-primary" onclick="addCondition()">+</button>
-				</div>
-				<div class="col-md-1 form-group">
-					<button id="rmBtn0" class="btn btn-primary" onclick="removeCondition(0)">-</button>
-				</div>
-			</div>
-			<div id="searchBtnDiv" class="row">
-				<div class="form-group col-md-1 col-xs-1">
-					<button id="searchBtn" type="button" class="btn btn-primary" onclick="search()"><span class="fa fa-search"></span>搜索</button>
-				</div>
-			</div>
-		</div>
-		<div class="container">
-			<div class="row">
-				<form class="form-inline" role="form">
-					<div class="form-group col-md-3">
-						<label class="control-label" for="studentNumber">按学号搜索</label><br>
-						<input type="text" class="form-control" id="studentNumber" th:value="${studentInfoCondition.student_number}" placeholder="">
-					</div>
-					<div class="form-group col-md-3">
-						<label class="control-label" for="project">按姓名搜索</label><br>
-						<input type="text" class="form-control" id="studentName" th:value="${studentInfoCondition.name}" placeholder="">
-					</div>
-					<div class="form-group col-md-3">
-						<label class="control-label" for="semester">按学院搜索</label><br>
-						<select id="select_academyopt" class="form-control" style="width: 70%;">
-							<option value="">请选择学院</option>
-							<th:block th:each="academy,iterStat : ${academies}">
-								<option th:id="${academy.academy_no}" th:value="${academy.academy_name}" th:text="${academy.academy_name}">学院名</option>
+							<th:block th:each="major,iterStat : ${majors}">
+								<option th:id="${major.major_no}" th:value="${major.major_name}" th:text="${major.major_name}">专业名</option>
 							</th:block>
 						</select>
 					</div>
-					<div class="form-group col-md-3">
-						<label class="control-label" for=""></label><br>
-						<button type="button" class="btn btn-primary" onclick="searchStudentInfoByCondition()">搜索</button>
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStudentModal"><span class="fa fa-user-plus"></span>新增</button>
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#excelImportModal"><span class="fa fa-file-excel-o"></span>Excel导入</button>
+				</div>
+				<div class="col-md-1 form-group">
+					<button class="btn btn-info" onclick="addCondition()">+</button>
+				</div>
+				<div class="col-md-1 form-group">
+					<button id="rmBtn0" class="btn btn-danger" onclick="removeCondition(0)">-</button>
+				</div>
+			</div>
+			
+			<!-- 查询当前条件信息，生成条件框并回显搜索条件 -->
+			<th:block th:each="highCondition, iterStat : ${studentInfoHighConditions}">
+				<th:block th:if="${iterStat.index gt 0}">
+					<div th:id="'condition0' + ${iterStat.index}" class="row">
+						<div th:id="'alterDiv0' + ${iterStat.index}" class="col-md-3 form-group">
+							<div class="btn-group" data-toggle="buttons">
+								<label class="btn btn-default active">
+									<input type="radio" th:name="'andor' + ${iterStat.index}" value="and" />and</label>
+								<label class="btn btn-default">
+									<input type="radio" th:name="'andor' + ${iterStat.index}" value="or" />or</label>
+							</div>
+						</div>
+						<div class="col-md-7 form-group">
+							<div class="input-group">
+								<div class="input-group-btn">
+									<button class="btn btn-default dropdown-toggle" name="searchType" data-toggle="dropdown">
+										<span th:id="'conditionName0' + ${iterStat.index}">学号</span>
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li><a th:id="'stdNumber0' + ${iterStat.index}" th:onclick="'changeConditionNameAndType(this,\'0' + ${iterStat.index} + '\')'">学号</a></li>
+										<li><a th:id="'stdName0' + ${iterStat.index}" th:onclick="'changeConditionNameAndType(this,\'0' + ${iterStat.index} + '\')'">姓名</a></li>
+										<li><a th:id="'stdSex0' + ${iterStat.index}" th:onclick="'changeConditionNameAndType(this,\'0' + ${iterStat.index} + '\')'">性别</a></li>
+										<li><a th:id="'stdAcademy0' + ${iterStat.index}" th:onclick="'changeConditionNameAndType(this,\'0' + ${iterStat.index} + '\')'">所在学院</a></li>
+										<li><a th:id="'stdMajor0' + ${iterStat.index}" th:onclick="'changeConditionNameAndType(this,\'0' + ${iterStat.index} + '\')'">专业</a></li>
+										<li><a th:id="'stdIDnumber0' + ${iterStat.index}" th:onclick="'changeConditionNameAndType(this,\'0' + ${iterStat.index} + '\')'">身份证号</a></li>
+									</ul>
+								</div>
+								<input th:id="'conditionValue0' + ${iterStat.index}" class="form-control" type="text" />
+								<select th:id="'sexopt0' + ${iterStat.index}" class="form-control">
+									<option value ="男">男</option>
+									<option value ="女">女</option>
+								</select>
+								<select th:id="'academyopt0' + ${iterStat.index}" class="form-control">
+									<option value ="">请选择学院</option>
+									<th:block th:each="academy,iterStat : ${academies}">
+										<option th:id="${academy.academy_no}" th:value="${academy.academy_name}" th:text="${academy.academy_name}">学院名</option>
+									</th:block>
+								</select>
+								<select th:id="'majoropt0' + ${iterStat.index}" class="form-control">
+									<option value ="">请选择专业</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-1 form-group">
+							<button class="btn btn-info" th:onclick="addCondition()">+</button>
+						</div>
+						<div class="col-md-1 form-group">
+							<button th:id="'rmBtn0' + ${iterStat.index}" class="btn btn-danger" th:onclick="'removeCondition(\'0' + ${iterStat.index} + '\')'">-</button>
+						</div>
 					</div>
-				</form>
+				</th:block>
+			</th:block>
+			<div id="searchBtnDiv" class="row">
+				<div class="form-group col-md-1 col-xs-3">
+					<button id="searchBtn" type="button" class="btn btn-info" th:onclick="search()"><span class="fa fa-search"></span>搜索</button>
+				</div>
+				<div class="form-group col-md-1 col-xs-3">
+					<button type="button" class="btn btn-info" data-toggle="modal" data-target="#addStudentModal"><span class="fa fa-user-plus"></span>新增</button>
+				</div>
+				<div class="form-group col-md-1 col-xs-6">
+					<button type="button" class="btn btn-info" data-toggle="modal" data-target="#excelImportModal"><span class="fa fa-file-excel-o"></span>Excel导入</button>
+				</div>
 			</div>
 			<table id="studentInfoForm" class="table table-bordered table-hover">
 				<caption class="text-center">学生信息</caption>
@@ -99,7 +130,7 @@
 					</thead>
 					<tbody>
 						<th:block th:if="${studentInfoPageBean.informations!=null}">
-							<tr  th:each="information,iterStat : ${studentInfoPageBean.informations}"> 
+							<tr th:each="information,iterStat : ${studentInfoPageBean.informations}"> 
 							   <td th:text="${information.student_number}">Studentnumber</td>
 							   <td th:text="${information.name}">Name</td>
 							   <td th:text="${information.sex}">Sex</td>
@@ -108,7 +139,7 @@
 							   <td class="hidden-xs" th:text="${information.birth}">Birth</td>
 							   <td class="hidden-xs" th:text="${information.id_number}">ID_Number</td>
 							   <td>
-							   		<button class="btn btn-primary" th:onclick="'editStudentInfoByStudentNumber('+${information.student_number}+')'" data-toggle="modal" data-target="#myModal"><span class="fa fa-edit"></span>修改</button>
+							   		<button class="btn btn-info" th:onclick="'editStudentInfoByStudentNumber('+${information.student_number}+')'" data-toggle="modal" data-target="#myModal"><span class="fa fa-edit"></span>修改</button>
 							   		<button th:onclick="'deleteStudentInfoByStudentNumber('+${information.student_number}+')'" class="btn btn-danger"><span class="fa fa-trash"></span>删除</button>
 							   </td>
 							</tr>
@@ -136,6 +167,14 @@
 					</ul>
 				</div>
 			</th:block>
+			
+			<!-- 隐藏表单,用于提交指定数据 -->
+			<div>
+				<form id="searchForm" action="/manage/studentInfoList" method="post">
+					<input id="pageValue" name="page" value="" type="hidden" />
+					<input id="conditionValue" name="conditions" value="" type="hidden" />
+				</form>
+			</div>
 			
 			<!-- 模态框（Modal） -->
 			<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -337,17 +376,108 @@
 						academy[academies[i].academy_name].push(m);
 				}
 			}
-			var objacademyopt = $("#select_academyopt").get(0);
-			for(var i = 0;i < objacademyopt.options.length;i++){
-				var tmp = objacademyopt.options[i].value;
-				if(tmp == /*[[${studentInfoCondition.academy}]]*/ ''){
-					objacademyopt.options[i].selected="selected";
-					break;
+	
+			
+			
+			function highConditionReShow(){
+				var divs = $("div[id^='condition']");//搜索所有以condition开头的div
+				var highConditions = /*[[${studentInfoHighConditions}]]*/ 'student_number';
+				//遍历条件对象，将对应变量名字转换为中文显示如  student_number->学号
+				for(var j = 0;j < highConditions.length;j++){
+					if(highConditions[j].conditionName == 'student_number')
+						highConditions[j].conditionName = '学号';
+					if(highConditions[j].conditionName == 'name')
+						highConditions[j].conditionName = '姓名';
+					if(highConditions[j].conditionName == 'sex')
+						highConditions[j].conditionName = '性别';
+					if(highConditions[j].conditionName == 'academy')
+						highConditions[j].conditionName = '所在学院';
+					if(highConditions[j].conditionName == 'major')
+						highConditions[j].conditionName = '专业';
+					if(highConditions[j].conditionName == 'id_number')
+						highConditions[j].conditionName = '身份证号';
 				}
+				//遍历所有条件搜索div，将model中的值给页面进行回显
+				for(var i = 0;i < divs.length;i++){
+					if(i == 0){
+						$("#" + divs[i].id).find("button[id^='rmBtn']").hide();
+					}
+					var name = highConditions[i].conditionName;//获取条件名字
+					$("#" + divs[i].id).find("span[id^='conditionName']").text(name);//设置条件名字
+					var value = highConditions[i].conditionValue;//获取条件值
+					//如果条件名为：学号，姓名，身份证号，则隐藏select框，显示input框,并为其设置值为value
+					if(name == '学号' || name == '姓名' || name == '身份证号'){
+						$("#" + divs[i].id).find("select[id^='sexopt']").hide();
+						$("#" + divs[i].id).find("select[id^='majoropt']").hide();
+						$("#" + divs[i].id).find("select[id^='academyopt']").hide();
+						$("#" + divs[i].id).find("input[id^='conditionValue']").show();
+						$("#" + divs[i].id).find("input[id^='conditionValue']").val(value);
+					}
+					//如果条件名为性别，则隐藏其他，显示性别select框,并设置选择的值为value
+					if(name == '性别'){
+						$("#" + divs[i].id).find("select[id^='majoropt']").hide();
+						$("#" + divs[i].id).find("select[id^='academyopt']").hide();
+						$("#" + divs[i].id).find("input[id^='conditionValue']").hide();
+						$("#" + divs[i].id).find("select[id^='sexopt']").show();
+						var objsex = $("#" + divs[i].id).find("select[id^='sexopt']").get(0);
+						for(var k = 0;k < objsex.options.length;k++){
+							var tmp = objsex.options[k].value;
+							if(tmp == value){
+								objsex.options[k].selected="selected";
+								break;
+							}
+						}
+					}
+					if(name == '所在学院'){
+						$("#" + divs[i].id).find("select[id^='sexopt']").hide();
+						$("#" + divs[i].id).find("select[id^='majoropt']").hide();
+						$("#" + divs[i].id).find("input[id^='conditionValue']").hide();
+						$("#" + divs[i].id).find("select[id^='academyopt']").show();
+						var objacademy = $("#" + divs[i].id).find("select[id^='academyopt']").get(0);
+						for(var k = 0;k < objacademy.options.length;k++){
+							var tmp = objacademy.options[k].value;
+							if(tmp == value){
+								objacademy.options[k].selected="selected";
+								break;
+							}
+						}
+					}
+					if(name == '专业'){
+						$("#" + divs[i].id).find("select[id^='sexopt']").hide();
+						$("#" + divs[i].id).find("select[id^='academyopt']").hide();
+						$("#" + divs[i].id).find("input[id^='conditionValue']").hide();
+						$("#" + divs[i].id).find("select[id^='majoropt']").show();
+						var objmajor = $("#" + divs[i].id).find("select[id^='majoropt']").get(0);
+						for(var k = 0;k < objmajor.options.length;k++){
+							var tmp = objmajor.options[k].value;
+							if(tmp == value){
+								objmajor.options[k].selected="selected";
+								break;
+							}
+						}
+					}
+					if(i > 0){
+						//获取andor的值
+						var andorValue = highConditions[i].andor;
+						//设置选中值和label的active属性
+						if(andorValue == 'and'){
+							$("#" + divs[i].id).find("input[name^='andor'][value='and']").attr("checked",true);
+						}
+						else{
+							$("#" + divs[i].id).find("input[name^='andor'][value='or']").attr("checked",true);
+							$("#" + divs[i].id).find("input[name^='andor'][value='or']").parent().addClass("active");
+							$("#" + divs[i].id).find("input[name^='andor'][value='and']").parent().removeClass("active");
+						}
+					}
+				}				
 			}
 			
+			//分页提交数据
 			function pageFun(page){
-				locationUrl('/manage/studentInfoList?page=' + page + '&student_number=' +  $("#studentNumber").val() + '&name=' + $("#studentName").val() + '&academy=' + $("#select_academyopt").val(),'studentInfoList');
+				var conditions = allHighCondition();
+				$("#pageValue").val(page);
+				$("#conditionValue").val(JSON.stringify(conditions));
+				$("#searchForm").submit();
 			}
 		/*]]>*/
 		</script>
@@ -369,7 +499,7 @@
 		var objacademyopt = $("#select_academyopt").get(0);
 		for(var i = 0;i < objacademyopt.options.length;i++){
 			var tmp = objacademyopt.options[i].value;
-			if(tmp == /*[[${studentInfoCondition.academy}]]*/ ''){
+			if(tmp == ''){
 				objacademyopt.options[i].selected="selected";
 				break;
 			}
@@ -415,10 +545,6 @@
 	        
 	    });
 	
-		//条件查询
-		function searchStudentInfoByCondition(){
-			locationUrl('/manage/studentInfoList?student_number=' + $("#studentNumber").val() + '&name=' + $("#studentName").val() + '&academy=' + $("#select_academyopt").val(),'studentInfoList');
-		}
 	
 		//删除
 		function deleteStudentInfoByStudentNumber(student_number) {

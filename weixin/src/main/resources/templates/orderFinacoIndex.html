@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="student_layout">
+<body>
+<section layout:fragment="content">
+    <div id="app" class="container">
+        <template v-for="grade in grades">
+            <div class="row">
+                <div class="col-md-2 col-xs-2"></div>
+                <div class="col-md-6 col-xs-6">
+                    <label>{{grade}}级体测预约入口</label>
+                </div>
+                <div class="col-md-4 col-xs-4">
+                    <a v-if="validate(loginStudent.student_number,grade)" href="/student/orderFinaco" class="btn btn-info">进入</a>
+                    <a v-else type="button" class="btn btn-info" disabled>进入</a>
+                </div>
+            </div>
+            <hr>
+        </template>
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            data:{
+                loginStudent:{},
+                grades:[]
+            },
+            created:function () {
+                this.$http.post("/student/getLoginStudentInfo",{},{emulateJSON:true}).then(function (data) {
+                    this.loginStudent = data.body;
+
+                });
+                this.$http.post("/student/getAllGrade",{},{emulateJSON:true}).then(function (data) {
+                    this.grades = data.body;
+                });
+            },
+            methods:{
+                validate:function (student_number, grade) {
+                    var value = student_number + "";
+                    return value.substring(0,4) == grade;
+                }
+            }
+        })
+    </script>
+</section>
+</body>
+</html>

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.jinqshen.weixin.pojo.table.ExtraExercise;
+import com.jinqshen.weixin.service.ManageExtraExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +42,9 @@ public class TestController {
 	
 	@Autowired
 	private ManageStudentInfoService manageStudentInfoService;
+
+	@Autowired
+	private ManageExtraExerciseService manageExtraExerciseService;
 	
 	@RequestMapping("/importData")
 	public String importData() {
@@ -98,5 +103,27 @@ public class TestController {
 			testService.saveExcelDataService(multipartFile);
 		}
 		return "{}";
+	}
+
+	@RequestMapping("/extraExercise")
+	public String extraExercise(){
+		return  "extraExercise";
+	}
+
+	@RequestMapping("/ui")
+	public String ui(){
+		return  "studentExtraExercise";
+	}
+
+	@ResponseBody
+	@RequestMapping("/findAll")
+	public List<ExtraExercise> findAll(){
+		List<ExtraExercise> list = manageExtraExerciseService.getAllExtraExercise();
+		return list;
+	}
+
+	@RequestMapping("/transcript")
+	public String transcript(){
+		return "transcript";
 	}
 }

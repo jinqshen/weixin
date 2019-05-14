@@ -3,7 +3,7 @@
 
 <mapper namespace="com.jinqshen.weixin.mapper.StudentMapper">
 	<resultMap type="com.jinqshen.weixin.pojo.StudentAccount" id="BaseResultMap">
-		<id column="student_number" property="student_number" jdbcType="VARCHAR"/>
+		<id column="student_number" property="student_number" jdbcType="INTEGER"/>
 		<result column="student_password" property="student_password" jdbcType="VARCHAR"/>
 	</resultMap>
 	
@@ -23,4 +23,14 @@
 		into student_account(student_number, student_password)
 		values(#{student_number}, #{studentPassword_md5})
 	</insert>
+
+	<update id="updateStudentAccount">
+		update student_account
+		<set>
+			student_password = #{studentPassword_md5}
+		</set>
+		<where>
+			student_number = #{student_number}
+		</where>
+	</update>
 </mapper>

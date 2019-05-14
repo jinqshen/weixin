@@ -71,13 +71,13 @@ public class StudentInfoExcelUtil extends BaseExcelUtil<StudentInfo> {
 						if(cell.getCellType() == CellType.NUMERIC) {
 							Date birthday = cell.getDateCellValue();
 							java.sql.Date birth = new java.sql.Date(birthday.getTime());
-							studentInfo.setBirth(birth);;
+							studentInfo.setBirth(birth);
 						}
 						break;
 					case 6:
 						if(cell.getCellType() == CellType.STRING) {
 							String id_number = cell.getStringCellValue();
-							studentInfo.setId_number(id_number);;
+							studentInfo.setId_number(id_number);
 						}
 						break;
 					default:

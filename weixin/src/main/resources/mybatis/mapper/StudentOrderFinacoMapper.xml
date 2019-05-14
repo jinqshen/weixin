@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jinqshen.weixin.mapper.StudentOrderFinacoMapper">
+
+	<select id="findOrderFinacoByGrade" parameterType="java.lang.String" resultType="com.jinqshen.weixin.pojo.table.OrderFinaco">
+		select *
+		from order_finaco
+		<where>
+			for_grade = #{for_grade}
+		</where>
+	</select>
+
+	<select id="findCountOfOrderFinacoByGradeAndAcademy" resultType="java.lang.Integer">
+		select count(*)
+		from order_finaco
+		<where>
+			for_grade = #{for_grade}
+			<if test="for_academy != null and for_academy != ''">
+				and for_academy = #{for_academy}
+			</if>
+		</where>
+	</select>
+
+	<select id="findOrderFinacoByGradeAndAcademy" resultType="com.jinqshen.weixin.pojo.table.OrderFinaco">
+		select *
+		from order_finaco
+		<where>
+			for_grade = #{for_grade}
+			<if test="for_academy != null and for_academy != ''">
+				and for_academy = #{for_academy}
+			</if>
+		</where>
+		limit #{beginNumber},#{pageSize}
+	</select>
+
+	<select id="findJoinedOrderFinacoNo" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select order_class_no
+		from student_finaco
+		<where>
+			student_number = #{student_number}
+		</where>
+	</select>
+
+	<select id="findAllAcademies" resultType="com.jinqshen.weixin.pojo.table.Academy">
+		select *
+		from academy
+		<where>
+			1 = 1
+		</where>
+	</select>
+
+	<insert id="insertOrderTheFinaco">
+		insert
+		into student_finaco(student_number,order_class_no)
+		values(#{student_number},#{order_class_no})
+	</insert>
+
+	<delete id="deleteOrderTheFinaco">
+		delete
+		from student_finaco
+		<where>
+			student_number = #{student_number} and order_class_no = #{order_class_no}
+		</where>
+	</delete>
+</mapper>

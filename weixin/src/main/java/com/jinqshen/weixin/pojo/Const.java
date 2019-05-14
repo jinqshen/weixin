@@ -6,7 +6,8 @@ package com.jinqshen.weixin.pojo;
  */
 public enum Const {
 
-	LoginUser("loginUser");
+	LoginUser("loginUser"),
+	LoginManageUser("loginManageUser");
 	
 	private String value;
 	

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jinqshen.weixin.mapper.ManageExtraExerciseMapper">
+
+	<select id="findAllExtraExercise" resultType="com.jinqshen.weixin.pojo.table.ExtraExercise">
+		select extra_exercise_no,project,introduce,date_format(createTime, '%Y-%m-%d %H:%i:%s') createTime,date_format(beginTime, '%Y-%m-%d %H:%i:%s') beginTime,date_format(endTime, '%Y-%m-%d %H:%i:%s') endTime,teacher,capacity,location,status
+		from extra_exercise
+		<where>
+			1 = 1
+		</where>
+	</select>
+
+	<select id="findCountOfExtraExercises" resultType="java.lang.Integer">
+		select count(*)
+		from extra_exercise
+		<where>
+			1 = 1
+			<if test="status != '' and status != null">
+				and status = #{status}
+			</if>
+			<if test="teacher != null">
+				and teacher like "%"#{teacher}"%"
+			</if>
+		</where>
+	</select>
+
+	<select id="findExtraExercises" resultType="com.jinqshen.weixin.pojo.table.ExtraExercise">
+		select *
+		from extra_exercise
+		<where>
+			1 = 1
+			<if test="status != '' and status != null">
+				and status = #{status}
+			</if>
+			<if test="teacher != null">
+				and teacher like "%"#{teacher}"%"
+			</if>
+		</where>
+		limit #{beginNumber},#{pageSize}
+	</select>
+
+	<select id="findTheExtraExercise" parameterType="java.lang.Integer" resultType="com.jinqshen.weixin.pojo.table.ExtraExercise">
+		select extra_exercise_no,project,introduce,date_format(createTime, '%Y-%m-%d %H:%i:%s') createTime,date_format(beginTime, '%Y-%m-%d %H:%i:%s') beginTime,date_format(endTime, '%Y-%m-%d %H:%i:%s') endTime,teacher,capacity,location,status
+		from extra_exercise
+		<where>
+			extra_exercise_no = #{extra_exercise_no}
+		</where>
+	</select>
+
+	<select id="findJoinedCountOfStudent" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(*)
+		from student_exercise
+		<where>
+			extra_exercise_no = #{extra_exercise_no}
+		</where>
+	</select>
+
+	<select id="findJoinedStudents" resultType="com.jinqshen.weixin.pojo.table.StudentInfo">
+		select student_info.student_number,name,sex,major,academy,birth,id_number
+		from student_info inner join student_exercise
+		<where>
+			student_info.student_number = student_exercise.student_number and
+			extra_exercise_no = #{extra_exercise_no}
+		</where>
+		limit #{beginNumber},#{pageSize}
+	</select>
+
+	<select id="findAllJoinedStudents" resultType="com.jinqshen.weixin.pojo.table.StudentInfo">
+		select student_info.student_number,name,sex,major,academy,birth,id_number
+		from student_info inner join student_exercise
+		<where>
+			student_info.student_number = student_exercise.student_number and
+			extra_exercise_no = #{extra_exercise_no}
+		</where>
+	</select>
+
+	<insert id="insertExtraExercise" parameterType="com.jinqshen.weixin.pojo.table.ExtraExercise">
+		insert
+		into extra_exercise(project,createTime,beginTime,endTime,introduce,teacher,capacity,location,status)
+		values (#{project},#{createTime},#{beginTime},#{endTime},#{introduce},#{teacher},#{capacity},#{location},#{status})
+	</insert>
+
+	<update id="updateTheExtraExercise" parameterType="com.jinqshen.weixin.pojo.table.ExtraExercise">
+		update extra_exercise
+		<set>
+			project = #{project},createTime = #{createTime},beginTime = #{beginTime},endTime = #{endTime},introduce = #{introduce},teacher = #{teacher},capacity = #{capacity},location = #{location},status = #{status}
+		</set>
+		<where>
+			extra_exercise_no = #{extra_exercise_no}
+		</where>
+	</update>
+
+	<delete id="deleteExtraExercise">
+		delete *
+		from extra_exercise
+		<where>
+			extra_exercise_no = #{extra_exercise_no}
+		</where>
+	</delete>
+
+	<delete id="deleteJoinedRecord">
+		delete *
+		from student_exercise
+		<where>
+			extra_exercise_no = #{extra_exercise_no}
+		</where>
+	</delete>
+</mapper>

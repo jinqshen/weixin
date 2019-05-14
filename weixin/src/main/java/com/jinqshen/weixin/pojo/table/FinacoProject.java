@@ -14,25 +14,25 @@ public class FinacoProject implements Serializable {
 	private static final long serialVersionUID = -2819348619598961036L;
 	
 	//体测项目ID
-	private Integer finaco_no;
+	private Integer project_no;
 	
 	//体测项目名
-	private String name;
+	private String project_name;
 
-	public Integer getFinaco_no() {
-		return finaco_no;
+	public Integer getProject_no() {
+		return project_no;
 	}
 
-	public void setFinaco_no(Integer finaco_no) {
-		this.finaco_no = finaco_no;
+	public void setProject_no(Integer project_no) {
+		this.project_no = project_no;
 	}
 
-	public String getName() {
-		return name;
+	public String getProject_name() {
+		return project_name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setProject_name(String project_name) {
+		this.project_name = project_name;
 	}
 
 }

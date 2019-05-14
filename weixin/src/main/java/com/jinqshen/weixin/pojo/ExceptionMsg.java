@@ -3,7 +3,9 @@ package com.jinqshen.weixin.pojo;
 public enum ExceptionMsg {
 	SUCCESS("000000", "操作成功"),
 	FAILED("999999","操作失败"),
-    LoginNameOrPassWordError("000100", "学号或者密码错误！");
+	NOTEXIST("888888","该学号不在学生数据库内！"),
+    LoginNameOrPassWordError("000100", "学号或者密码错误！"),
+	ManageLoginameOrPassWordError("000200","用户名或者密码错误！");
     
    private ExceptionMsg(String code, String msg) {
         this.code = code;

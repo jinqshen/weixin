@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="student_layout">
+<body>
+<section layout:fragment="content">
+    <div id="app" class="container">
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <button v-if="isNewest" type="button" class="btn btn-primary" @click="findAllFinacoTranscript()">查看全部学期成绩</button>
+            <button v-if="!isNewest" type="button" class="btn btn-primary" @click="findNewestFinacoTranscript()">查看最新学期成绩</button>
+            <a href="/student/transcriptChart" class="btn btn-primary">图像显示</a>
+        </div>
+        <hr>
+        <template v-for="(finacoTranscriptkey,key) in finacoTranscripts">
+            <div class="row">
+                <div class="col-md-2 col-xs-1">
+                </div>
+                <div class="col-md-8 col-xs-10">
+                    <table class="table table-bordered table-hover">
+                        <caption>
+                            {{loginStudent.name}}的{{key}}成绩单
+                        </caption>
+                        <thead>
+                        <tr>
+                            <td>体测项目</td>
+                            <td>测试结果</td>
+                            <td>得分</td>
+                            <td>等级</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="finacoTranscript in finacoTranscriptkey">
+                                <td>{{finacoTranscript.project_name}}</td>
+                                <td v-if="finacoTranscript.project_name == '身高'">{{finacoTranscript.test_result_describe}}cm</td>
+                                <td v-else-if="finacoTranscript.project_name == '体重'">{{finacoTranscript.test_result_describe}}kg</td>
+                                <td v-else-if="finacoTranscript.project_name == '1000米跑' || finacoTranscript.project_name == '800米跑'">{{finacoTranscript.test_result_describe}}分/秒</td>
+                                <td v-else-if="finacoTranscript.project_name == '50米跑'">{{finacoTranscript.test_result_describe}}秒</td>
+                                <td v-else-if="finacoTranscript.project_name == '肺活量'">{{finacoTranscript.test_result_describe}}ml</td>
+                                <td v-else-if="finacoTranscript.project_name == '引体向上'">{{finacoTranscript.test_result_describe}}个</td>
+                                <td v-else-if="finacoTranscript.project_name == '立定跳远'">{{finacoTranscript.test_result_describe}}cm</td>
+                                <td v-else-if="finacoTranscript.project_name == '一分钟仰卧起'">{{finacoTranscript.test_result_describe}}个</td>
+                                <td v-else-if="finacoTranscript.project_name == '坐位体前屈'">{{finacoTranscript.test_result_describe}}cm</td>
+                                <td v-else>{{finacoTranscript.test_result_describe}}</td>
+                                <td v-if="finacoTranscript.score < 60.0 && finacoTranscript.project_name != 'BMI指数'" style="color: red">{{finacoTranscript.score}}</td>
+                                <td v-else-if="finacoTranscript.project_name == 'BMI指数'"></td>
+                                <td v-else style="color: green">{{finacoTranscript.score}}</td>
+                                <td v-if="finacoTranscript.score < 60.0 && finacoTranscript.project_name != 'BMI指数'" style="color: red">{{finacoTranscript.level}}</td>
+                                <td v-else-if="finacoTranscript.project_name == 'BMI指数' && finacoTranscript.level == '体重过低'" style="color: orange">{{finacoTranscript.level}}</td>
+                                <td v-else-if="finacoTranscript.project_name == 'BMI指数' && finacoTranscript.level != '正常'" style="color: red">{{finacoTranscript.level}}</td>
+                                <td v-else style="color: green">{{finacoTranscript.level}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-2 col-xs-1">
+                </div>
+            </div>
+        </template>
+        <hr>
+        <div class="row">
+            <div>
+                有项目没及格？去
+                <a href="/student/orderFinacoIndex" class="btn btn-primary">补测</a>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        var v =  new Vue({
+            el:'#app',
+            data:{
+                finacoTranscripts:{},
+                isNewest:true,
+                loginStudent:{}
+            },
+            created:function(){
+                this.$http.post("/student/finacoTranscript",{
+                    isNewest:this.isNewest
+                },{emulateJSON:true}).then(function (data) {
+                    this.finacoTranscripts = data.body;
+                });
+                this.$http.post("/student/getLoginStudentInfo",{},{emulateJSON:true}).then(function (data) {
+                    this.loginStudent = data.body;
+                });
+            },
+            methods:{
+                findAllFinacoTranscript:function () {
+                    this.isNewest = false
+                    this.$http.post("/student/finacoTranscript",{
+                        isNewest:this.isNewest
+                    },{emulateJSON:true}).then(function (data) {
+                        this.finacoTranscripts = data.body;
+                    })
+                },
+                findNewestFinacoTranscript:function () {
+                    this.isNewest = true;
+                    this.$http.post("/student/finacoTranscript",{
+                        isNewest:this.isNewest
+                    },{emulateJSON:true}).then(function (data) {
+                        this.finacoTranscripts = data.body;
+                    })
+                }
+            }
+        })
+
+    </script>
+</section>
+</body>
+
+</html>

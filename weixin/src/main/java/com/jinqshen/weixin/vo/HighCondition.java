@@ -8,6 +8,13 @@ public class HighCondition {
 	
 	private String andor;
 	
+	public HighCondition(String conditionName, String conditionValue, String andor) {
+		super();
+		this.conditionName = conditionName;
+		this.conditionValue = conditionValue;
+		this.andor = andor;
+	}
+
 	public String getConditionName() {
 		return conditionName;
 	}

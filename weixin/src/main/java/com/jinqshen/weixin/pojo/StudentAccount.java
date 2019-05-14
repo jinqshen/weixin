@@ -13,7 +13,7 @@ public class StudentAccount implements Serializable {
 	 */
 	private static final long serialVersionUID = -3294403206633509420L;
 
-	private String student_number;
+	private Integer student_number;
 	
 	private String student_password;
 	
@@ -21,17 +21,17 @@ public class StudentAccount implements Serializable {
 		super();
 	}
 
-	public StudentAccount(String student_number, String student_password) {
+	public StudentAccount(Integer student_number, String student_password) {
 		super();
 		this.student_number = student_number;
 		this.student_password = student_password;
 	}
 
-	public String getStudent_number() {
+	public Integer getStudent_number() {
 		return student_number;
 	}
 
-	public void setStudent_number(String student_number) {
+	public void setStudent_number(Integer student_number) {
 		this.student_number = student_number;
 	}
 

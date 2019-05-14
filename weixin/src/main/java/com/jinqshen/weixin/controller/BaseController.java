@@ -38,8 +38,8 @@ import com.jinqshen.weixin.vo.PageBean;
 @RequestMapping("/")
 public class BaseController {
 	
-	@Autowired
-	private InformationService informationService;
+/*	@Autowired
+	private InformationService informationService;*/
 	
 	@RequestMapping("/wx1")
 	public void vaildate(HttpServletRequest request, HttpServletResponse response) {
@@ -127,7 +127,7 @@ public class BaseController {
 		return "chart";
 	}
 	
-	@RequestMapping("/bookList")
+	/*@RequestMapping("/bookList")
 	public ModelAndView layoutTest() {
 		ModelAndView mav = new ModelAndView();
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -139,9 +139,9 @@ public class BaseController {
 		mav.addObject("pageBean", pageBean);
 		mav.setViewName("bookList");
 		return mav;
-	}
+	}*/
 	
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping("/delete")
 	public String deleteInfo(int finacono) {
 		informationService.deleteInfoByFinacono(finacono);
@@ -153,7 +153,7 @@ public class BaseController {
 	public Information editInfo(int finacono) {
 		Information information = informationService.selectInfoByFinacono(finacono);
 		return information;
-	}
+	}*/
 	
 	@RequestMapping("/layout")
 	public String layTest() {

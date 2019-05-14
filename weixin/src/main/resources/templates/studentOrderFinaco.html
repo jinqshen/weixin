@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="student_layout">
+<body>
+<section layout:fragment="content">
+    <div id="app" class="container">
+        <div class="row">
+            <div class="col-md-2 col-xs-1"></div>
+            <div class="btn-group text-center">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span id="academybar">全部学院</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a @click="searchOrderFinacoByAcademy(''),changeAcademyBar('全部学院')">全部学院</a></li>
+                    <template v-for="academy in academies">
+                        <li><a @click="searchOrderFinacoByAcademy(academy.academy_name),changeAcademyBar(academy.academy_name)">{{academy.academy_name}}</a></li>
+                    </template>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-3" v-for="orderFinaco in orderFinacos">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        {{orderFinaco.for_grade}}级{{orderFinaco.for_academy}}体测预约
+                    </div>
+                    <div class="panel-body" style="height: 270px">
+                        <label>创建时间：</label>{{orderFinaco.createdTime}}<br />
+                        <label>预约开放时间：</label>{{orderFinaco.order_beginTime}}-{{orderFinaco.order_endTime}}<br />
+                        <label>体测时间：</label>{{orderFinaco.finaco_beginTime}}-{{orderFinaco.finaco_endTime}}<br />
+                        <label>状态：</label>{{orderFinaco.status}}<br />
+                        <label>体测地点：</label>{{orderFinaco.finaco_location}}<br />
+                        <label>体测详情：</label>{{orderFinaco.finaco_describe}}
+                    </div>
+                    <div class="panel-footer" style="height: 50px;">
+                        <template v-if="orderFinaco.status == '体测预约中'">
+                            <div v-if="orderFinaco.order_class_no == joinedOrderFinacoNo">
+                                <button type="button" class="btn btn-info" disabled>已预约</button>
+                                <button type="button" class="btn btn-danger" @click="cancelOrder(orderFinaco.order_class_no)">取消预约</button>
+                            </div>
+                            <div v-else>
+                                <button v-if="loginStudent.academy == orderFinaco.for_academy" type="button" class="btn btn-primary" @click="orderTheFinaco(orderFinaco.order_class_no)">预约</button>
+                                <button v-else type="button" class="btn btn-primary" disabled>预约</button>
+                            </div>
+                        </template>
+                        <div v-else-if="orderFinaco.status == '未开放预约'">
+                            <button type="button" class="btn btn-primary" disabled>暂未开放</button>
+                        </div>
+                        <div v-else>
+                            <button type="button" class="btn btn-primary" disabled>预约已结束</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div v-if="totalSize != 0" class="row text-center">
+            <ul class="pagination">
+                <li v-if="currentPage == 1" class="disabled"><a>&laquo;</a></li>
+                <li v-else><a @click="pageSearchOrderFinacos(currentPage-1)">&laquo;</a></li>
+                <template v-for="n in totalPage">
+                    <li v-if="n == currentPage" class="active"><a href="javascript:void(0)">{{ n }}</a></li>
+                    <li v-else><a @click="pageSearchOrderFinacos(n)">{{ n }}</a></li>
+                </template>
+                <li v-if="currentPage == totalPage" class="disabled"><a>&raquo;</a></li>
+                <li v-else><a @click="pageSearchOrderFinacos(currentPage+1)">&raquo;</a></li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                currentPage: 1,
+                pageSize: 0,
+                totalSize: 0,
+                totalPage: 0,
+                orderFinacos:[],
+                academies:[],
+                joinedOrderFinacoNo:"",
+                loginStudent:{},
+                for_academy:""
+            },
+            created: function () {
+                this.$http.post("/student/getOrderFinaco",{
+                    page:1,
+                    for_academy:""
+                },{emulateJSON:true}).then(function (data) {
+                    this.orderFinacos = data.body.informations;
+                    this.currentPage = data.body.currentPage;
+                    this.totalSize = data.body.totalSize;
+                    this.totalPage = data.body.totalPage;
+                });
+                this.$http.post("/student/getLoginStudentInfo",{},{emulateJSON:true}).then(function (data) {
+                    this.loginStudent = data.body;
+                });
+                this.$http.post("/student/findAllAcademies",{
+                },{emulateJSON:true}).then(function (data) {
+                    this.academies = data.body;
+                });
+                this.$http.post("/student/findStudentJoinedOrderFinacoNo",{},{emulateJSON:true}).then(function (data) {
+                    this.joinedOrderFinacoNo = data.bodyText;
+                })
+            },
+            methods:{
+                pageSearchOrderFinacos:function (page) {
+                    this.$http.post("/student/getOrderFinaco",{
+                        page:page,
+                        for_academy:this.for_academy
+                    },{emulateJSON:true}).then(function (data) {
+                        this.totalPage = data.body.totalPage;
+                        this.totalSize = data.body.totalSize;
+                        this.currentPage=data.body.currentPage;
+                        this.orderFinacos = data.body.informations;
+                        scrollTo(0,0);
+                    });
+                },
+                searchOrderFinacoByAcademy:function (academyName) {
+                    this.for_academy = academyName;
+                    this.$http.post("/student/getOrderFinaco",{
+                        page:1,
+                        for_academy:this.for_academy
+                    },{emulateJSON:true}).then(function (data) {
+                        this.totalPage = data.body.totalPage;
+                        this.totalSize = data.body.totalSize;
+                        this.currentPage=data.body.currentPage;
+                        this.orderFinacos = data.body.informations;
+                    });
+                },
+                orderTheFinaco:function (order_class_no) {
+                    this.$http.post("/student/orderTheFinaco",{
+                        order_class_no:order_class_no
+                    },{emulateJSON:true}).then(function (data) {
+                        alert(data.bodyText);
+                        this.$http.post("/student/findStudentJoinedOrderFinacoNo",{},{emulateJSON:true}).then(function (data) {
+                            this.joinedOrderFinacoNo = data.bodyText;
+                        })
+                    })
+                },
+                cancelOrder:function (order_class_no) {
+                    this.$http.post("/student/cancelOrder",{
+                        order_class_no:order_class_no
+                    },{emulateJSON:true}).then(function (data) {
+                        alert(data.bodyText);
+                        this.$http.post("/student/findStudentJoinedOrderFinacoNo",{},{emulateJSON:true}).then(function (data) {
+                            this.joinedOrderFinacoNo = data.bodyText;
+                        })
+                    })
+                }
+            }
+        })
+
+        function changeAcademyBar(academy_name) {
+            $("#academybar").text(academy_name);
+        }
+    </script>
+</section>
+</body>
+</html>
