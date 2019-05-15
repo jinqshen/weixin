@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="/css/font-awesome-4.7.0/css/font-awesome.min.css">
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="/js/parsley.min.js"></script>
 </head>
 <body>
 	<nav class="navbar navbar-default" role="navigation">
@@ -63,18 +64,16 @@
 		<button type="button" class="btn btn-default">按钮</button>
 	</div>
 	<div style="padding:100px 100px 10px;">
-		<form id="loginform" class="form-horizontal" role="form">
-			<div class="input-group">
-				<span class="input-group-addon">用户名</span>
-				<input name="username" type="text" class="form-control" placeholder="用户名"/>
-
+		<form id="form" data-parsley-validate="true" onsubmit="return false">
+			<div class="form-group has-feedback">
+				<input type="text" placeholder="请输入你的学号" v-model="username" class="form-control" data-parsley-required-message="请输入你的学号" required="required" pattern="/^\d+$/" data-parsley-pattern-message="请输入正确的学号" />
 			</div>
-			<br>
-			<div class="input-group">
-				<span class="input-group-addon">&nbsp;密码&nbsp;</span>
-				<input name="password" type="password" class="form-control" placeholder="密码"/>
+			<div class="form-group has-feedback">
+				<input type="password" placeholder="请输入你的密码" v-model="password" class="form-control" data-parsley-required-message="请输入你的密码" required="required" pattern="/^(?![0-9]+$)(?![a-zA-Z]+$)(?![^0-9a-zA-Z]+$)\S{6,20}$/" data-parsley-pattern-message="请输入6-20位字母数字组合" />
 			</div>
+			<button onclick="login()" class="btn btn-block btn-primary mt-lg">登录</button>
 		</form>
+
 	</div>
 	</div>
 	
@@ -82,4 +81,11 @@
 		<a class="text-center" href="http://www.miitbeian.gov.cn/" >蜀ICP备19004418号</a>
 	</footer>
 </body>
+	<script>
+		function login() {
+			var ok = $('#form').parsley().isValid({force: true});
+			if(!ok)
+				return ;
+		}
+	</script>
 </html>

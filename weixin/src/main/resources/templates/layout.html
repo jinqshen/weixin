@@ -16,6 +16,7 @@
     <link rel="stylesheet" th:href="@{/css/toastr/toastr.min.css}"/>
     <!--<link rel="stylesheet" th:href="@{/css/bootstrap-3.4.1-dist/css/bootstrap.css}">-->
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+    <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" th:href="@{/css/fix.css}" />
     <link rel="stylesheet" th:href="@{/css/bootstrap-fileinput-5.0.1/fileinput.css}">
     <link rel="stylesheet" th:href="@{/theme/bootstrap-fileinput-5.0.1/explorer-fas/theme.css}" media="all">
@@ -63,6 +64,10 @@
             },
             methods:{
                 newPassword:function () {
+                    var ok = $('#newPasswordForm').parsley().isValid({force: true});
+                    if(!ok){
+                        return;
+                    }
                     if(this.newpassword == this.renewpassword){
                         this.$http.post("/manage/newPassword",{
                             newpassword:this.newpassword
@@ -74,6 +79,10 @@
                     }
                 },
                 addManageAccount:function () {
+                    var ok = $('#addManageAccountForm').parsley().isValid({force: true});
+                    if(!ok){
+                        return;
+                    }
                     if(this.newManageAccount.manage_password == this.newManageAccount.remanage_password){
                         this.$http.post("/manage/addManageAccount",{
                             manage_username:this.newManageAccount.manage_username,

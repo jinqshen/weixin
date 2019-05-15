@@ -47,9 +47,9 @@
     });
 
 	//条件查询
-	function searchStudentInfoByCondition(){
+/*	function searchStudentInfoByCondition(){
 		locationUrl('/manage/studentInfoList?student_number=' + $("#studentNumber").val() + '&name=' + $("#studentName").val() + '&academy=' + $("#select_academyopt").val(),'studentInfoList');
-	}
+	}*/
 
 	//删除学生信息
 	function deleteStudentInfoByStudentNumber(student_number) {
@@ -58,8 +58,12 @@
 					student_number: student_number
 				},
 				function(data) {
-					toastr.success(data, '操作成功');
-					window.location.reload();
+					if(data == '删除成功'){
+						toastr.success(data, '操作成功');
+						window.location.reload();
+					}else{
+						toastr.error(data,'操作失败');
+					}
 				});
 		}
 	}
@@ -70,8 +74,12 @@
 				finaco_no: finaco_no
 				},
 				function(data) {
-					toastr.success(data, '操作成功');
-					window.location.reload();
+					if(data == '删除成功'){
+						toastr.success(data, '操作成功');
+						window.location.reload();
+					}else{
+						toastr.error(data,'操作失败');
+					}
 				});
 		}
 	}
@@ -158,6 +166,10 @@
 	
 	//更新学生信息
 	function updateStudentInfo(){
+		var ok = $('#updateStudentInfoForm').parsley().isValid({force: true});
+		if(!ok){
+			return;
+		}
 		$.post("/manage/updateStudentInfo",{
 			student_number: $("#student_number").val(),
 			name: $("#name").val(),
@@ -167,12 +179,20 @@
 			birth: $("#birth").val(),
 			id_number: $("#id_number").val()
 		},function(data){
-			toastr.success(data, '操作成功');
-			window.location.reload();
+			if(data == '更新成功'){
+				toastr.success(data, '操作成功');
+				window.location.reload();
+			}else{
+				toastr.error(data,'操作失败');
+			}
 		});
 	}
 	//更新体测结果信息
 	function updateFinaco(){
+		var ok = $('#updateFinacoForm').parsley().isValid({force: true});
+		if(!ok){
+			return;
+		}
 		$.post("/manage/updateFinacoTestResult",{
 			finaco_no: $("#finaco_no").val(),
 			student_number: $("#student_number").val(),
@@ -181,13 +201,21 @@
 			grade: $("#gradeopt").val(),
 			test_result_describe: $("#test_result_describe").val()
 		},function(data){
-			toastr.success(data, '操作成功');
-			window.location.reload();
+			if(data == '更新成功'){
+				toastr.success(data, '操作成功');
+				window.location.reload();
+			}else{
+				toastr.error(data,'操作失败');
+			}
 		});
 	}
 	
 	//新增学生信息
 	function insertStudentInfo(){
+		var ok = $('#newStudentInfoForm').parsley().isValid({force: true});
+		if(!ok){
+			return;
+		}
 		$.post("/manage/addStudentInfo",{
 			student_number: $("#add_student_number").val(),
 			name: $("#add_name").val(),
@@ -197,12 +225,20 @@
 			birth: $("#add_birth").val(),
 			id_number: $("#add_id_number").val()
 		},function(data){
-			toastr.success(data, '操作成功');
-			window.location.reload();
+			if(data == '新增成功'){
+				toastr.success(data, '操作成功');
+				window.location.reload();
+			}else{
+				toastr.error(data,'操作失败');
+			}
 		});
 	}
 	//新增体测结果信息
 	function insertFinaco(){
+		var ok = $('#newFinacoForm').parsley().isValid({force: true});
+		if(!ok){
+			return;
+		}
 		$.post("/manage/insertFinacoTestResult",{
 			finaco_no: 0,
 			student_number: $("#add_student_number").val(),
@@ -211,8 +247,12 @@
 			grade: $("#add_gradeopt").val(),
 			test_result_describe: $("#add_test_result_describe").val()
 		},function(data){
-			toastr.success(data, '操作成功');
-			window.location.reload();
+			if(data == '新增成功'){
+				toastr.success(data, '操作成功');
+				window.location.reload();
+			}else{
+				toastr.error(data,'操作失败');
+			}
 		});
 	}
 	

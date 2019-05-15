@@ -197,20 +197,20 @@
 			<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
-							</button>
-							<h4 class="modal-title" id="myModalLabel">
-								修改体测成绩信息
-							</h4>
-						</div>
-						<div class="modal-body">
-							<form class="form-horizontal">
+						<form id="updateFinacoForm" class="form-horizontal"  data-parsley-validate="true" onsubmit="return false">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+								</button>
+								<h4 class="modal-title" id="myModalLabel">
+									修改体测成绩信息
+								</h4>
+							</div>
+							<div class="modal-body">
 								<input id="finaco_no" name="finaco_no" class="form-control" type="hidden">
 								<div class="form-group">
 									<label class="control-label col-sm-2">学号</label>
 									<div class="col-sm-10">
-										<input id="student_number" name="student_number" class="form-control" type="text">
+										<input id="student_number" name="student_number" class="form-control" type="text" data-parsley-required-message="请输入学号" required="required">
 									</div>
 								</div>
 								<div class="form-group">
@@ -249,18 +249,19 @@
 								<div class="form-group">
 									<label class="control-label col-sm-2">体测结果</label>
 									<div class="col-sm-10">
-										<input id="test_result_describe" name="test_result_describe" class="form-control" type="text">
+										<input id="test_result_describe" name="test_result_describe" class="form-control" type="text" data-parsley-required-message="请输入体测结果" required="required">
 									</div>
 								</div>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button id="closeBtn" type="button" class="btn btn-default" data-dismiss="modal">关闭
-							</button>
-							<button id="submitEditBtn" type="button" onclick="updateFinaco()" data-dismiss="modal" class="btn btn-primary">
-								提交更改
-							</button>
-						</div>
+
+							</div>
+							<div class="modal-footer">
+								<button id="closeBtn" type="button" class="btn btn-default" data-dismiss="modal">关闭
+								</button>
+								<button id="submitEditBtn" onclick="updateFinaco()" class="btn btn-primary">
+									提交更改
+								</button>
+							</div>
+						</form>
 					</div><!-- /.modal-content -->
 				</div><!-- /.modal-dialog -->
 			</div><!-- /.modal -->
@@ -269,19 +270,19 @@
 			<div class="modal" id="addFinacoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
-							</button>
-							<h4 class="modal-title" id="myModalLabel">
-								新增体测结果信息
-							</h4>
-						</div>
-						<div class="modal-body">
-							<form class="form-horizontal">
+						<form id="newFinacoForm" class="form-horizontal" data-parsley-validate="true" onsubmit="return false">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+								</button>
+								<h4 class="modal-title" id="addFinacoModalLabel">
+									新增体测结果信息
+								</h4>
+							</div>
+							<div class="modal-body">
 								<div class="form-group">
 									<label class="control-label col-sm-2">学号</label>
 									<div class="col-sm-10">
-										<input id="add_student_number" name="student_number" class="form-control" type="text">
+										<input id="add_student_number" name="student_number" class="form-control" type="text" data-parsley-required-message="请输入学号" required="required">
 									</div>
 								</div>
 								<div class="form-group">
@@ -320,18 +321,18 @@
 								<div class="form-group">
 									<label class="control-label col-sm-2">体测结果</label>
 									<div class="col-sm-10">
-										<input id="add_test_result_describe" name="add_test_result_describe" class="form-control" type="text">
+										<input id="add_test_result_describe" name="add_test_result_describe" class="form-control" type="text" data-parsley-required-message="请输入体测结果" required="required">
 									</div>
 								</div>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button id="add_closeBtn" type="button" class="btn btn-default" data-dismiss="modal">取消
-							</button>
-							<button id="add_submitEditBtn" type="button" onclick="insertFinaco()" data-dismiss="modal" class="btn btn-primary">
-								确定
-							</button>
-						</div>
+							</div>
+							<div class="modal-footer">
+								<button id="add_closeBtn" type="button" class="btn btn-default" data-dismiss="modal">取消
+								</button>
+								<button id="add_submitEditBtn" onclick="insertFinaco()" class="btn btn-primary">
+									确定
+								</button>
+							</div>
+						</form>
 					</div><!-- /.modal-content -->
 				</div><!-- /.modal-dialog -->
 			</div><!-- /.modal -->
@@ -342,7 +343,7 @@
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
 							</button>
-							<h4 class="modal-title" id="myModalLabel">
+							<h4 class="modal-title" id="excelImportModalLabel">
 								体测结果信息批量导入
 							</h4>
 						</div>

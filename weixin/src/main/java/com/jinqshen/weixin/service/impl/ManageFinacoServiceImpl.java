@@ -2,6 +2,8 @@ package com.jinqshen.weixin.service.impl;
 
 import java.util.List;
 
+import com.jinqshen.weixin.mapper.ManageStudentInfoMapper;
+import com.jinqshen.weixin.pojo.table.StudentInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,9 @@ public class ManageFinacoServiceImpl implements ManageFinacoService {
 
 	@Autowired
 	private ManageFinacoMapper manageFinacoMapper;
+
+	@Autowired
+	private ManageStudentInfoMapper manageStudentInfoMapper;
 	
 	@Override
 	public PageBean<Finaco> searchFinacoTestResultByHighCondition(int currentPage, List<HighCondition> highConditions) {
@@ -43,46 +48,53 @@ public class ManageFinacoServiceImpl implements ManageFinacoService {
 
 	@Override
 	public String addfinacoTestResult(Finaco finaco) {
-		String msg = "添加成功";
+		String msg = "新增成功";
 		Integer project_no = finaco.getProject_no();
 		float test_result = 0.0f;
 		try {
-			//若体测项目为1000米或者800米
-			if(project_no.equals(100010) || project_no.equals(100070)) {
-				String test_result_describe = finaco.getTest_result_describe();
-				String[] ms = test_result_describe.split("\'");
-				if(ms == null || ms.length != 2)
-					throw new Exception();
-				else {
-					test_result = Integer.parseInt(ms[0])*60 + Integer.parseInt(ms[1]);
-					finaco.setTest_result(test_result);
+			StudentInfo studentInfo = manageStudentInfoMapper.findStudentInfoByStudentNumber(finaco.getStudent_number());
+			if(studentInfo == null){
+				msg = "该学生信息不存在";
+			}
+			else{
+				//若体测项目为1000米或者800米
+				if(project_no.equals(100010) || project_no.equals(100070)) {
+					String test_result_describe = finaco.getTest_result_describe();
+					String[] ms = test_result_describe.split("\'");
+					if(ms == null || ms.length != 2)
+						throw new Exception();
+					else {
+						test_result = Integer.parseInt(ms[0])*60 + Integer.parseInt(ms[1]);
+						finaco.setTest_result(test_result);
+					}
 				}
-			}
-			//若体测项目为50米
-			else if (project_no.equals(100020)) {
-				String test_result_describe = finaco.getTest_result_describe();
-				String[] ms = test_result_describe.split("\"");
-				if(ms == null || ms.length != 2)
-					throw new Exception();
-				else {
-					test_result = Integer.parseInt(ms[0]) + Integer.parseInt(ms[1])*0.1f;
-					finaco.setTest_result(test_result);
+				//若体测项目为50米
+				else if (project_no.equals(100020)) {
+					String test_result_describe = finaco.getTest_result_describe();
+					String[] ms = test_result_describe.split("\"");
+					if(ms == null || ms.length != 2)
+						throw new Exception();
+					else {
+						test_result = Integer.parseInt(ms[0]) + Integer.parseInt(ms[1])*0.1f;
+						finaco.setTest_result(test_result);
+					}
 				}
+				//若体测项目为其他项目
+				else {
+					finaco.setTest_result(Integer.parseInt(finaco.getTest_result_describe()));
+				}
+				manageFinacoMapper.insertOneFinacoTestResult(finaco);
 			}
-			//若体测项目为其他项目
-			else {
-				finaco.setTest_result(Integer.parseInt(finaco.getTest_result_describe()));
-			}
-			manageFinacoMapper.insertOneFinacoTestResult(finaco);
+
 		} catch (Exception e) {
-			msg = "添加失败";
+			msg = "新增失败";
 		}
 		return msg;
 	}
 
 	@Override
 	public String saveFinacoTestResult(Finaco finaco) {
-		String msg = "保存成功";
+		String msg = "更新成功";
 		Integer project_no = finaco.getProject_no();
 		float test_result = 0.0f;
 		try {
@@ -114,7 +126,7 @@ public class ManageFinacoServiceImpl implements ManageFinacoService {
 			}
 			manageFinacoMapper.updateOneFinacoTestResult(finaco);
 		} catch (Exception e) {
-			msg = "保存失败";
+			msg = "更新失败";
 		}
 		return msg;
 	}

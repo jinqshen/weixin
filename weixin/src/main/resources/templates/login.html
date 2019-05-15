@@ -26,24 +26,22 @@
                <p class="text-center pv">请登录</p>
                <form id="form" data-parsley-validate="true" onsubmit="return false">
                   <div class="form-group has-feedback">
-                     <input type="text" placeholder="请输入你的学号" v-model="username" class="form-control" data-parsley-error-message="请输入你的学号" required="required" />
+                     <input type="text" placeholder="请输入你的学号" v-model="username" class="form-control" data-parsley-required-message="请输入你的学号" required="required" pattern="/^\d+$/" data-parsley-pattern-message="请输入正确的学号" />
                      <span class="fa fa-user-o form-control-feedback text-muted"></span>
                   </div>
                   <div class="form-group has-feedback">
-                     <input type="password" placeholder="请输入你的密码" v-model="password" class="form-control" data-parsley-error-message="请输入你的密码" required="required" />
+                     <input type="password" placeholder="请输入你的密码" v-model="password" class="form-control" data-parsley-required-message="请输入你的密码" required="required" pattern="/^(?![0-9]+$)(?![a-zA-Z]+$)(?![^0-9a-zA-Z]+$)\S{6,20}$/" data-parsley-pattern-message="请输入6-20位字母数字组合" />
                      <span class="fa fa-lock form-control-feedback text-muted"></span>
                   </div>
                   <div class="clearfix">
-                     <div class="pull-right">
-                        <a href="/forgotPassword" class="text-muted">忘记密码？</a>
-                     </div>
+
                   </div>
-                  <button v-on:click="login" class="btn btn-block btn-primary mt-lg">登录</button>
+                  <button v-on:click="login()" class="btn btn-block btn-primary mt-lg">登录</button>
                </form>
                <p></p>
                <div id="errorMsg" class="alert alert-danger text-center" style="display:none;"></div>
                <p class="pt-lg text-center">需要注册？</p>
-               <a href="/register" class="btn btn-block btn-default">现在就注册</a>
+               <a href="/student/registerPage" class="btn btn-block btn-default">现在就注册</a>
             </div>
          </div>
          <div class="p-lg text-center">
@@ -71,7 +69,7 @@
 	           'password': ''
 	       },
 	       methods: {
-	       	login: function(event){
+	       	login: function(){
 	       		var ok = $('#form').parsley().isValid({force: true});
 	       		if(!ok){
 	       			return;

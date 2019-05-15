@@ -50,69 +50,69 @@
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"
-                            aria-hidden="true">×
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">
-                        修改课外锻炼活动信息
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <form id="updateExerciseForm" class="form-horizontal">
+                <form id="updateExerciseForm" class="form-horizontal" data-parsley-validate="true" onsubmit="return false">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true">×
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            修改课外锻炼活动信息
+                        </h4>
+                    </div>
+                    <div class="modal-body">
                         <input type="hidden">
                         <div class="form-group">
                             <label class="control-label col-sm-2">课外锻炼项目</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="extraExercise.project">
+                                <input class="form-control" type="text" v-model="extraExercise.project" data-parsley-required-message="请输入课外锻炼项目" required="required">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">开始时间</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="extraExercise.beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                                <input class="form-control" type="text" v-model="extraExercise.beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss" data-parsley-required-message="请输入开始时间" required="required" pattern="((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$" data-parsley-pattern-message="请输入正确的日期格式:yyyy-MM-dd HH:mm:ss">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">结束时间</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="extraExercise.endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                                <input class="form-control" type="text" v-model="extraExercise.endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss" data-parsley-required-message="请输入结束时间" required="required" pattern="((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$" data-parsley-pattern-message="请输入正确的日期格式:yyyy-MM-dd HH:mm:ss">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">活动介绍</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" rows="3" v-model="extraExercise.introduce"></textarea>
+                                <textarea class="form-control" rows="3" v-model="extraExercise.introduce" data-parsley-required-message="请输入活动介绍" required="required"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">指导老师</label>
                             <div class="col-sm-10">
-                                <input  class="form-control" type="text" v-model="extraExercise.teacher">
+                                <input  class="form-control" type="text" v-model="extraExercise.teacher" data-parsley-required-message="请输入指导老师" required="required">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">地点</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="extraExercise.location">
+                                <input class="form-control" type="text" v-model="extraExercise.location" data-parsley-required-message="请输入地点" required="required">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">容量</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="extraExercise.capacity">
+                                <input class="form-control" type="text" v-model="extraExercise.capacity" data-parsley-required-message="请输入容量" required="required" pattern="/^\d+$/" data-parsley-pattern-message="请输入数字">
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">关闭
-                    </button>
-                    <button type="button" class="btn btn-primary" @click="updateExercise()" data-dismiss="modal">
-                        提交更改
-                    </button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">关闭
+                        </button>
+                        <button class="btn btn-primary" @click="updateExercise()">
+                            提交更改
+                        </button>
+                    </div>
+                </form>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
@@ -121,69 +121,69 @@
     <div class="modal fade" id="newExtraExerciseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"
-                            aria-hidden="true">×
-                    </button>
-                    <h4 class="modal-title" id="newExtraExerciseModalLabel">
-                        新增课外锻炼活动
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <form id="newExerciseForm" class="form-horizontal">
+                <form id="newExerciseForm" class="form-horizontal" data-parsley-validate="true" onsubmit="return false">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true">×
+                        </button>
+                        <h4 class="modal-title" id="newExtraExerciseModalLabel">
+                            新增课外锻炼活动
+                        </h4>
+                    </div>
+                    <div class="modal-body">
                         <input type="hidden">
                         <div class="form-group">
                             <label class="control-label col-sm-2">课外锻炼项目</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="newExtraExercise.project">
+                                <input class="form-control" type="text" v-model="newExtraExercise.project"data-parsley-required-message="请输入课外锻炼项目" required="required">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">开始时间</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="newExtraExercise.beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                                <input class="form-control" type="text" v-model="newExtraExercise.beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss" data-parsley-required-message="请输入开始时间" required="required" pattern="((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$" data-parsley-pattern-message="请输入正确的日期格式:yyyy-MM-dd HH:mm:ss">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">结束时间</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="newExtraExercise.endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                                <input class="form-control" type="text" v-model="newExtraExercise.endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss" data-parsley-required-message="请输入结束时间" required="required" pattern="((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$" data-parsley-pattern-message="请输入正确的日期格式:yyyy-MM-dd HH:mm:ss">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">活动介绍</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" rows="3" v-model="newExtraExercise.introduce"></textarea>
+                                <textarea class="form-control" rows="3" v-model="newExtraExercise.introduce" data-parsley-required-message="请输入活动介绍" required="required"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">指导老师</label>
                             <div class="col-sm-10">
-                                <input  class="form-control" type="text" v-model="newExtraExercise.teacher">
+                                <input  class="form-control" type="text" v-model="newExtraExercise.teacher" data-parsley-required-message="请输入指导老师" required="required">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">地点</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="newExtraExercise.location">
+                                <input class="form-control" type="text" v-model="newExtraExercise.location" data-parsley-required-message="请输入地点" required="required">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">容量</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="newExtraExercise.capacity">
+                                <input class="form-control" type="text" v-model="newExtraExercise.capacity" data-parsley-required-message="请输入容量" required="required" pattern="/^\d+$/" data-parsley-pattern-message="请输入数字">
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">关闭
-                    </button>
-                    <button type="button" class="btn btn-primary" @click="newExercise()" data-dismiss="modal">
-                        确认发布
-                    </button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">关闭
+                        </button>
+                        <button class="btn btn-primary" @click="newExercise()">
+                            确认发布
+                        </button>
+                    </div>
+                </form>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
@@ -279,6 +279,10 @@
                 })
             },
             updateExercise:function(){
+                var ok = $('#updateExerciseForm').parsley().isValid({force: true});
+                if(!ok){
+                    return;
+                }
                 var currentTime = getNowFormatDate();
                 this.$http.post("/manage/updateExtraExercise",{
                     extra_exercise_no:this.extraExercise.extra_exercise_no,
@@ -327,6 +331,10 @@
                 }
             },
             newExercise:function(){
+                var ok = $('#newExerciseForm').parsley().isValid({force: true});
+                if(!ok){
+                    return;
+                }
                 var currentTime = getNowFormatDate();
                 this.$http.post("/manage/newExtraExercise",{
                     extra_exercise_no:0,

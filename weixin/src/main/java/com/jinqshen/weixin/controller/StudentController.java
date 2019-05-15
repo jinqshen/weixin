@@ -64,6 +64,11 @@ public class StudentController {
 		return "login";
 	}
 
+	@RequestMapping("/registerPage")
+	public String registerPage(){
+		return "register";
+	}
+
 	/**
 	 * 学生登录接口
 	 * @param studentAccount

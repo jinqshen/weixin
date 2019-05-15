@@ -69,7 +69,7 @@ public class WeixinApplicationTests {
 		sonButtons.add(sonButton2);
 		FatherButton fatherButton1 = new FatherButton();
 		fatherButton1.setType("click");
-		fatherButton1.setName("每日推荐");
+		fatherButton1.setName("往期精彩");
 		fatherButton1.setKey("V001_TODAY");
 		FatherButton fatherButton2 = new FatherButton();
 		fatherButton2.setName("菜单");

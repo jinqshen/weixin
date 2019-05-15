@@ -75,16 +75,16 @@
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"
-                            aria-hidden="true">×
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">
-                        修改体测预约信息
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <form id="updateOrderFinacoForm" class="form-horizontal">
+                <form id="updateOrderFinacoForm" class="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true">×
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            修改体测预约信息
+                        </h4>
+                    </div>
+                    <div class="modal-body">
                         <input type="hidden">
                         <div class="form-group">
                             <label class="control-label col-sm-2">针对年级</label>
@@ -112,25 +112,25 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2">体测预约开始时间</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="orderFinacoClass.order_beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                                <input class="form-control" type="text" v-model="orderFinacoClass.order_beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss" data-parsley-required-message="请输入体测预约开始时间" required="required" pattern="((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$" data-parsley-pattern-message="请输入正确的日期格式:yyyy-MM-dd HH:mm:ss">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">体测预约结束时间</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="orderFinacoClass.order_endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                                <input class="form-control" type="text" v-model="orderFinacoClass.order_endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss" data-parsley-required-message="请输入体测预约结束时间" required="required" pattern="((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$" data-parsley-pattern-message="请输入正确的日期格式:yyyy-MM-dd HH:mm:ss">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">体测开始时间</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="orderFinacoClass.finaco_beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                                <input class="form-control" type="text" v-model="orderFinacoClass.finaco_beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss" data-parsley-required-message="请输入体测开始时间" required="required" pattern="((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$" data-parsley-pattern-message="请输入正确的日期格式:yyyy-MM-dd HH:mm:ss">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">体测结束时间</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="orderFinacoClass.finaco_endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                                <input class="form-control" type="text" v-model="orderFinacoClass.finaco_endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss" data-parsley-required-message="请输入体测结束时间" required="required" pattern="((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$" data-parsley-pattern-message="请输入正确的日期格式:yyyy-MM-dd HH:mm:ss">
                             </div>
                         </div>
                         <div class="form-group">
@@ -147,25 +147,25 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2">地点</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="orderFinacoClass.finaco_location">
+                                <input class="form-control" type="text" v-model="orderFinacoClass.finaco_location" data-parsley-required-message="请输入体测地点" required="required">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">相关介绍</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" cols="3" v-model="orderFinacoClass.finaco_describe"></textarea>
+                                <textarea class="form-control" cols="3" v-model="orderFinacoClass.finaco_describe" data-parsley-required-message="请输入体测相关介绍" required="required"></textarea>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">关闭
-                    </button>
-                    <button type="button" class="btn btn-primary" @click="updateOrderFinacoClass()" data-dismiss="modal">
-                        提交更改
-                    </button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">关闭
+                        </button>
+                        <button class="btn btn-primary" @click="updateOrderFinacoClass()">
+                            提交更改
+                        </button>
+                    </div>
+                </form>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
@@ -174,17 +174,16 @@
     <div class="modal fade" id="newOrderFinacoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"
-                            aria-hidden="true">×
-                    </button>
-                    <h4 class="modal-title" id="newOrderFinacoModalLabel">
-                        新增体测预约信息
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <form id="newOrderFinacoForm" class="form-horizontal">
-                        <input type="hidden">
+                <form id="newOrderFinacoForm" class="form-horizontal" data-parsley-validate="true" onsubmit="return false">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true">×
+                        </button>
+                        <h4 class="modal-title" id="newOrderFinacoModalLabel">
+                            新增体测预约信息
+                        </h4>
+                    </div>
+                    <div class="modal-body">
                         <div class="form-group">
                             <label class="control-label col-sm-2">针对年级</label>
                             <div class="col-sm-10">
@@ -222,25 +221,25 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2">体测预约开始时间</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="newOrderFinacoClass.order_beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                                <input class="form-control" type="text" v-model="newOrderFinacoClass.order_beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss" data-parsley-required-message="请输入体测预约开始时间" required="required" pattern="((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$" data-parsley-pattern-message="请输入正确的日期格式:yyyy-MM-dd HH:mm:ss">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">体测预约结束时间</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="newOrderFinacoClass.order_endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                                <input class="form-control" type="text" v-model="newOrderFinacoClass.order_endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss" data-parsley-required-message="请输入体测预约结束时间" required="required" pattern="((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$" data-parsley-pattern-message="请输入正确的日期格式:yyyy-MM-dd HH:mm:ss">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">体测开始时间</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="newOrderFinacoClass.finaco_beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                                <input class="form-control" type="text" v-model="newOrderFinacoClass.finaco_beginTime" placeholder="格式:yyyy-MM-dd HH:mm:ss" data-parsley-required-message="请输入体测开始时间" required="required" pattern="((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$" data-parsley-pattern-message="请输入正确的日期格式:yyyy-MM-dd HH:mm:ss">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">体测结束时间</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="newOrderFinacoClass.finaco_endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss">
+                                <input class="form-control" type="text" v-model="newOrderFinacoClass.finaco_endTime" placeholder="格式:yyyy-MM-dd HH:mm:ss" data-parsley-required-message="请输入体测结束时间" required="required" pattern="((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$" data-parsley-pattern-message="请输入正确的日期格式:yyyy-MM-dd HH:mm:ss">
                             </div>
                         </div>
                         <div class="form-group">
@@ -257,25 +256,25 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2">地点</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" v-model="newOrderFinacoClass.finaco_location">
+                                <input class="form-control" type="text" v-model="newOrderFinacoClass.finaco_location" data-parsley-required-message="请输入体测地点" required="required">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2">相关介绍</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" cols="3" v-model="newOrderFinacoClass.finaco_describe"></textarea>
+                                <textarea class="form-control" cols="3" v-model="newOrderFinacoClass.finaco_describe" data-parsley-required-message="请输入体测相关介绍" required="required"></textarea>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">取消
-                    </button>
-                    <button type="button" class="btn btn-primary" @click="newOrderFinaco_Class()" data-dismiss="modal">
-                        确认发布
-                    </button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">取消
+                        </button>
+                        <button class="btn btn-primary" @click="newOrderFinaco_Class()">
+                            确认发布
+                        </button>
+                    </div>
+                </form>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
@@ -340,6 +339,10 @@
                     })
                 },
                 updateOrderFinacoClass:function () {
+                    var ok = $('#updateOrderFinacoForm').parsley().isValid({force: true});
+                    if(!ok){
+                        return;
+                    }
                     this.$http.post("/manage/updateOrderFinaco",this.orderFinacoClass,{emulateJSON:true}).then(function (data) {
                         alert(data.bodyText);
                         this.$http.post("/manage/orderFinaco",{
@@ -361,6 +364,10 @@
                     this.conditions.push(academy_name);
                 },
                 newOrderFinaco_Class:function () {
+                    var ok = $('#newOrderFinacoForm').parsley().isValid({force: true});
+                    if(!ok){
+                        return;
+                    }
                     var currentTime = getNowFormatDate();
                     this.$http.post("/manage/newOrderFinacoClass",{
                         for_grade:this.newOrderFinacoClass.for_grade,

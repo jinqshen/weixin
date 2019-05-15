@@ -11,12 +11,14 @@
     <link rel="icon" href="/image/hfut.jpg" type="image/jpg" />
     <title >大学生体测管理系统</title>
     <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="/css/font-awesome-4.7.0/css/font-awesome.css" />
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.min.js"></script>
     <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
     <script src="/js/echarts/echarts.min.js"></script>
+    <script th:src="@{/js/parsley.min.js}"></script>
 </head>
 
 <body>
@@ -41,6 +43,10 @@
         },
         methods:{
             newPassword:function () {
+                var ok = $('#studentNewPasswordForm').parsley().isValid({force: true});
+                if(!ok){
+                    return ;
+                }
                 if(this.newpassword == this.renewpassword){
                     this.$http.post("/student/newPassword",{
                         newpassword:this.newpassword
