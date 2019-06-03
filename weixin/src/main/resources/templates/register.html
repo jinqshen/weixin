@@ -26,7 +26,7 @@
                <form id="form" data-parsley-validate="true" onsubmit="return false">
                   <div class="form-group has-feedback">
                      <label for="signupInputStudentNumber" class="text-muted">学号</label>
-                     <input id="signupInputStudentNumber" type="text" placeholder="输入学号" class="form-control" v-model="username"  data-parsley-required-message="请输入你的学号" data-parsley-type-message="请输入正确的学号" required="required"/>
+                     <input id="signupInputStudentNumber" type="text" placeholder="输入学号" class="form-control" v-model="username"  data-parsley-required-message="请输入你的学号" pattern="/^\d+$/" data-parsley-pattern-message="请输入正确的学号" required="required"/>
                      <span class="fa fa-user-o form-control-feedback text-muted"></span>
                   </div>
                   <div class="form-group has-feedback">
@@ -39,7 +39,7 @@
                <p></p>
                <div id="errorMsg" class="alert alert-danger text-center" style="display:none;"></div>
                <p class="pt-lg text-center">已经有账户？</p>
-               <a href="/login" class="btn btn-block btn-default">登录</a>
+               <a href="/student/loginPage" class="btn btn-block btn-default">登录</a>
             </div>
          </div>
          <div class="p-lg text-center">

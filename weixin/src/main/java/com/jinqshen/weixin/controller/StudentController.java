@@ -103,7 +103,7 @@ public class StudentController {
 			StudentInfo studentInfo = studentInfoService.findStudentInfo(studentAccount.getStudent_number());
 			if(studentInfo != null){
 				studentService.registStudentAccount(studentAccount.getStudent_number(), studentAccount.getStudent_password());
-				return new ResponseData(ExceptionMsg.SUCCESS, "/login");
+				return new ResponseData(ExceptionMsg.SUCCESS, "/student/loginPage");
 			}else{
 				return new ResponseData(ExceptionMsg.NOTEXIST);
 			}
@@ -118,7 +118,8 @@ public class StudentController {
 	 */
 	@RequestMapping("/logout")
 	public String logout(){
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
 		request.getSession().invalidate();
 		return "login";
 	}
@@ -131,7 +132,8 @@ public class StudentController {
 	@ResponseBody
 	@RequestMapping("/newPassword")
 	public String newPassword(String newpassword){
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
 		StudentAccount studentAccount = (StudentAccount) request.getSession().getAttribute(Const.LoginUser.getValue());
 		String msg = studentService.alterPassword(studentAccount.getStudent_number(), newpassword);
 		return msg;
@@ -154,7 +156,8 @@ public class StudentController {
 	@ResponseBody
 	@RequestMapping("/joinExtraExercise")
 	public String joinExtraExercise(int extra_exercise_no){
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
 		StudentAccount studentAccount = (StudentAccount) request.getSession().getAttribute(Const.LoginUser.getValue());
 		int student_number = studentAccount.getStudent_number();
 		String joinMsg = studentExtraExerciseService.studentJoinExercise(student_number, extra_exercise_no);
@@ -169,7 +172,8 @@ public class StudentController {
 	@ResponseBody
 	@RequestMapping("/exitExtraExercise")
 	public String exitExtraExercise(int extra_exercise_no){
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
 		StudentAccount studentAccount = (StudentAccount) request.getSession().getAttribute(Const.LoginUser.getValue());
 		int student_number = studentAccount.getStudent_number();
 		String exitMsg = studentExtraExerciseService.studentExitExercise(student_number, extra_exercise_no);
@@ -227,7 +231,8 @@ public class StudentController {
 	@ResponseBody
 	@RequestMapping("/joinedExtraExercises")
 	public List<Integer> joinedExtraExercise(){
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
 		StudentAccount studentAccount = (StudentAccount) request.getSession().getAttribute(Const.LoginUser.getValue());
 		int student_number = studentAccount.getStudent_number();
 		List<Integer> joinedExtraExercises = studentExtraExerciseService.getJoinedExtraExercise(student_number);
@@ -242,7 +247,8 @@ public class StudentController {
 	@ResponseBody
 	@RequestMapping("/finacoTranscript")
 	public Map<String, List<Transcript>> finacoTranscript(@RequestParam(value = "isNewest") boolean isNewest){
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
 		StudentAccount studentAccount = (StudentAccount) request.getSession().getAttribute(Const.LoginUser.getValue());
 		int student_number = studentAccount.getStudent_number();
 		Map<String, List<Transcript>> map = studentTranscriptService.getFinacoTranscript(student_number,isNewest);
@@ -287,7 +293,8 @@ public class StudentController {
 	@ResponseBody
 	@RequestMapping("/getLoginStudentInfo")
 	public StudentInfo getLoginStudentInfo(){
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
 		StudentAccount studentAccount = (StudentAccount) request.getSession().getAttribute(Const.LoginUser.getValue());
 		int student_number = studentAccount.getStudent_number();
 		StudentInfo studentInfo = studentInfoService.findStudentInfo(student_number);
@@ -314,7 +321,8 @@ public class StudentController {
 		if(page != null){
 			currentPage = page;
 		}
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
 		StudentAccount studentAccount = (StudentAccount) request.getSession().getAttribute(Const.LoginUser.getValue());
 		int student_number = studentAccount.getStudent_number();
 		PageBean<OrderFinaco> orderFinacosPageBean = studentOrderFinacoService.getOrderFinacoByStudentNumber(currentPage,student_number,for_academy);
@@ -328,7 +336,8 @@ public class StudentController {
 	@ResponseBody
 	@RequestMapping("/findStudentJoinedOrderFinacoNo")
 	public Integer findStudentJoinedOrderFinaco(){
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
 		StudentAccount studentAccount = (StudentAccount) request.getSession().getAttribute(Const.LoginUser.getValue());
 		int student_number = studentAccount.getStudent_number();
 		Integer order_class_no = studentOrderFinacoService.findJoinedOrderFinaco(student_number);
@@ -343,7 +352,8 @@ public class StudentController {
 	@ResponseBody
 	@RequestMapping("/orderTheFinaco")
 	public String orderTheFinaco(int order_class_no){
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
 		StudentAccount studentAccount = (StudentAccount) request.getSession().getAttribute(Const.LoginUser.getValue());
 		int student_number = studentAccount.getStudent_number();
 		String msg = studentOrderFinacoService.orderTheFinaco(student_number,order_class_no);
@@ -356,7 +366,8 @@ public class StudentController {
 	@ResponseBody
 	@RequestMapping("/cancelOrder")
 	public String cancelOrder(int order_class_no){
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
 		StudentAccount studentAccount = (StudentAccount) request.getSession().getAttribute(Const.LoginUser.getValue());
 		int student_number = studentAccount.getStudent_number();
 		String msg = studentOrderFinacoService.cancelOrderTheFinaco(student_number,order_class_no);

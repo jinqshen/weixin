@@ -397,7 +397,7 @@ public class ManageController {
 	 */
 	@ResponseBody
 	@RequestMapping("/insertFinacoTestResult")
-	public String addOnefinacoTestResult(Finaco finaco) {
+	public String addOneFinacoTestResult(Finaco finaco) {
 		String msg = manageFinacoService.addfinacoTestResult(finaco);
 		return msg;
 	}

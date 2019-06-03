@@ -2,32 +2,16 @@ package com.jinqshen.weixin.controller;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.List;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.jinqshen.weixin.pojo.AccessToken;
-import com.jinqshen.weixin.pojo.Information;
-import com.jinqshen.weixin.pojo.StudentAccount;
-import com.jinqshen.weixin.service.InformationService;
-import com.jinqshen.weixin.service.RedisService;
-import com.jinqshen.weixin.service.StudentService;
 import com.jinqshen.weixin.utils.CheckUtils;
-import com.jinqshen.weixin.utils.HttpClientUtil;
 import com.jinqshen.weixin.utils.MessageUtils;
 import com.jinqshen.weixin.utils.TextMessageUtil;
-import com.jinqshen.weixin.vo.PageBean;
 
 /**
  * 
@@ -37,9 +21,6 @@ import com.jinqshen.weixin.vo.PageBean;
 @Controller
 @RequestMapping("/")
 public class BaseController {
-	
-/*	@Autowired
-	private InformationService informationService;*/
 	
 	@RequestMapping("/wx1")
 	public void vaildate(HttpServletRequest request, HttpServletResponse response) {
@@ -111,58 +92,4 @@ public class BaseController {
 		}
 		out.close();
 	}
-	
-	@RequestMapping("/login")
-	public String login() {
-		return "login";
-	}
-	
-	@RequestMapping("/register")
-	public String register() {
-		return "register";
-	}
-	
-	@RequestMapping("/chart")
-	public String chartTest() {
-		return "chart";
-	}
-	
-	/*@RequestMapping("/bookList")
-	public ModelAndView layoutTest() {
-		ModelAndView mav = new ModelAndView();
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-		String parameter = request.getParameter("page");
-		int currentPage = 1;
-		if(parameter != null)
-			currentPage = Integer.parseInt(parameter);
-		PageBean<Information> pageBean = informationService.findInfoByPage(currentPage);
-		mav.addObject("pageBean", pageBean);
-		mav.setViewName("bookList");
-		return mav;
-	}*/
-	
-	/*@ResponseBody
-	@RequestMapping("/delete")
-	public String deleteInfo(int finacono) {
-		informationService.deleteInfoByFinacono(finacono);
-		return "数据删除成功";
-	}
-	
-	@ResponseBody
-	@RequestMapping("/edit")
-	public Information editInfo(int finacono) {
-		Information information = informationService.selectInfoByFinacono(finacono);
-		return information;
-	}*/
-	
-	@RequestMapping("/layout")
-	public String layTest() {
-		return "layout";
-	}
-	
-	@RequestMapping("/home")
-	public String homeTest() {
-		return "home";
-	}
-	
 }

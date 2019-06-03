@@ -85,10 +85,11 @@ public class PageFilter implements Filter {
 			|| url.contains("/student/register")
 			|| url.contains("/wx")
 			|| url.contains("/student/loginPage")
+			|| url.contains("/manage/downloadFinacoTestResultExcel")
+			|| url.contains("manage/downloadStudentInfoExcel")
+			|| url.contains("/manage/exportJoinedStudentInfos")
 			|| url.contains("/manage/login")
-			|| url.contains("/manage/loginValidate")
-			|| url.contains("/login")
-			|| url.contains("/register"))
+			|| url.contains("/manage/loginValidate"))
 			return true;
 		else {
 			return false;

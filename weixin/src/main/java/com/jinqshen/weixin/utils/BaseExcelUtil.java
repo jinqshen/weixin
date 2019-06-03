@@ -197,7 +197,7 @@ public abstract class BaseExcelUtil<T> {
 		try {
 			String fileName = name + ".xlsx";
 			response.setContentType("application/x-msdownload");
-			response.setHeader("Content-Disposition", "attachment;filename=" + new String( fileName.getBytes("gb2312"), "ISO8859-1" ));
+			response.setHeader("Content-Disposition", "attachment;filename=" + new String( fileName.getBytes("utf-8"), "ISO8859-1" ));
 			fos = new BufferedOutputStream(response.getOutputStream());
 			workbook.write(fos);
 		} catch (Exception e) {
